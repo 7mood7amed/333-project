@@ -9,12 +9,12 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     $password = htmlspecialchars($_POST['password']);
 
     // validating UOB email
-    $pattern = "/@uob\.edu\.bh/";
+    $pattern = "/@stu\.uob\.edu\.bh/";
     if(!preg_match($pattern ,$email)){
         die("Invalid email address. Only UOB email (@uob.edu.bh) are allowed");
     }
 
-    // hashing the password
+    // hashing the password (( Must be stored in actual DATABASE !! ))
     $hashed_password = password_hash($password,PASSWORD_DEFAULT);
 
     // message after successful registration
