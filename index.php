@@ -14,7 +14,7 @@ header('location:adminhome.php');
 
 require('footer.php');
 if(isset($_POST['comment'])){
-    $query = "INSERT INTO comments (userid, comment, roomId, reply) values (?,?)"
+    $query = "INSERT INTO comments (userid, comment, roomId, reply) values (?,?)";
 }
 ?>
 UPDATE comments SET reply= "somereply" WHERE ID= 

@@ -1,21 +1,39 @@
 <?php
+include 'db.php';
+session_start();
 
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
-    $email = htmlspecialchars($_POST['email']);
-    $password = htmlspecialchars($_POST['password']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
-    $registredEmail = "exp@stu.uob.edu.bh";   // to be replaced with email from database !! 
-    $registredHashedPassword = password_hash("pass123" , PASSWORD_DEFAULT); // password to be replaced with real DB pass
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+    $stmt->execute([$email]);
+    $user = $stmt->fetch();
 
-    if($email !== $registredEmail){
-        die("Invalid email or password.");
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['user_id'] = $user['id'];
+        header('Location: rooms.php');
+    } else {
+        $error = "Invalid credentials";
     }
-
-    if(!password_verify($password,$registredHashedPassword)){
-        die("Invalid email or password.");
-    }
-
-    echo "Login successful !";
 }
-
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+    <h2>Login</h2>
+    <?php if (isset($error)): ?>
+        <p><?= $error ?></p>
+    <?php endif; ?>
+    <form method="POST">
+        <input type="email" name="email" required placeholder="Email">
+        <input type="password" name="password" required placeholder="Password">
+        <button type="submit">Login</button>
+    </form>
+</body>
+</html>
