@@ -1,24 +1,29 @@
 <?php
-session_start(); // Start the session
+session_start();
+include 'db.php';
 
-if (isset($_GET['room_id'])) {
-    $roomId = intval($_GET['room_id']); // Ensure room_id is an integer
-
-    // Assuming $db is already initialized and connected to your database
-    $query = "SELECT * FROM rooms WHERE id = :roomId"; // Use prepared statements to prevent SQL injection
-    $stmt = $db->prepare($query);
-    $stmt->bindParam(':roomId', $roomId, PDO::PARAM_INT);
-    $stmt->execute();
-    $room = $stmt->fetch(); // Fetch the room details
-} else {
-    echo "Room ID not specified.";
-    exit;
+// Check if the room ID is provided
+if (!isset($_GET['id'])) {
+    die("Room ID is required.");
 }
+
+$room_id = (int) $_GET['id'];
+
+// Fetch room details
+$query = "SELECT * FROM rooms WHERE id = ?";
+$statement = $db->prepare($query);
+$statement->execute([$room_id]);
+$room = $statement->fetch();
 
 if (!$room) {
-    echo "Room not found.";
-    exit;
+    die("Room not found.");
 }
+
+// Fetch available timeslots for the room
+$query = "SELECT * FROM timeslots WHERE room_id = ? ORDER BY start_time";
+$statement = $db->prepare($query);
+$statement->execute([$room_id]);
+$timeslots = $statement->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,20 +31,82 @@ if (!$room) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room Details</title>
+    <style>
+        /* Basic styling for the page */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .room-details {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .room-details h2 {
+            margin: 0;
+            font-size: 2em;
+        }
+        .room-details p {
+            margin: 10px 0;
+        }
+        .timeslot-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        .timeslot-table th, .timeslot-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        .timeslot-table th {
+            background-color: #f2f2f2;
+        }
+        .timeslot-table td {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h1><?php echo htmlspecialchars($room['name']); ?></h1>
-    <p><strong>Capacity:</strong> <?php echo htmlspecialchars($room['capacity']); ?></p>
-    <p><strong>Equipment:</strong> <?php echo htmlspecialchars($room['equipment']); ?></p>
-    <p><strong>Available Timeslots:</strong></p>
-    <ul>
-        <?php
-        // Assuming 'timeslots' is a field in your database containing available times
-        $timeslots = json_decode($room['timeslots'], true); // Assuming timeslots are stored as JSON
-        foreach ($timeslots as $timeslot) {
-            echo "<li>" . htmlspecialchars($timeslot) . "</li>";
-        }
-        ?>
-    </ul>
+
+<main class="container">
+    <div class="room-details">
+        <h2><?php echo htmlspecialchars($room['name']); ?></h2>
+        <p><strong>Capacity:</strong> <?php echo htmlspecialchars($room['capacity']); ?> people</p>
+        <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($room['description'])); ?></p>
+        <p><strong>Equipment:</strong> <?php echo htmlspecialchars($room['equipment']); ?></p>
+
+        <h3>Available Timeslots</h3>
+        <?php if (count($timeslots) > 0): ?>
+            <table class="timeslot-table">
+                <thead>
+                    <tr>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($timeslots as $timeslot): ?>
+                        <tr>
+                            <td><?php echo date("Y-m-d H:i", strtotime($timeslot['start_time'])); ?></td>
+                            <td><?php echo date("Y-m-d H:i", strtotime($timeslot['end_time'])); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <p>No available timeslots for this room.</p>
+        <?php endif; ?>
+    </div>
+</main>
+
 </body>
 </html>

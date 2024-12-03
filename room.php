@@ -1,13 +1,13 @@
 <?php
-session_start(); // Start the session
+session_start();
+include 'db.php';
 
-if (isset($_SESSION['activeUser'])) {
-    // Assuming $db is already initialized and connected to your database
-    $query = "SELECT * FROM rooms";
-    
-    $result = $db->query($query); // Execute the query
-    $rows = $result->fetchAll(); // Fetch all rows at once
-}
+// Fetch all rooms
+$query = "SELECT * FROM rooms";
+$statement = $db->prepare($query);
+$statement->execute();
+$rooms = $statement->fetchAll();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,23 +15,65 @@ if (isset($_SESSION['activeUser'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room Browsing</title>
+    <style>
+        /* Basic styling for the page */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .room-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+        .room-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .room-card h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .room-card p {
+            margin: 10px 0;
+        }
+        .room-card a {
+            display: block;
+            margin-top: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .room-card a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <div id="rooms">
-        <?php
-        if (isset($rows) && count($rows) > 0) { // Check if there are rooms available
-            foreach ($rows as $row) {
-        ?>
-            <a href="roomDetails.php?room_id=<?php echo htmlspecialchars($row['id']); ?>">
-                <?php echo htmlspecialchars($row['name']); ?> <!-- Display room name -->
-            </a><br>
-        <?php
-            }
-        } else {
-            echo "No rooms available."; // Message if no rooms are found
-        }
-        ?>
+
+<main class="container">
+    <h1>Available Rooms</h1>
+
+    <div class="room-list">
+        <?php foreach ($rooms as $room): ?>
+            <div class="room-card">
+                <h2><?php echo htmlspecialchars($room['name']); ?></h2>
+                <p><strong>Capacity:</strong> <?php echo htmlspecialchars($room['capacity']); ?> people</p>
+                <p><strong>Equipment:</strong> <?php echo htmlspecialchars($room['equipment']); ?></p>
+                <a href="room_details.php?id=<?php echo $room['id']; ?>">View Details</a>
+            </div>
+        <?php endforeach; ?>
     </div>
+</main>
+
 </body>
 </html>
-

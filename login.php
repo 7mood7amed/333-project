@@ -2,23 +2,30 @@
 include 'db.php';
 session_start();
 
-$errors = []; // in case of any errors
-
+$errors = []; // In case of any errors
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = htmlspecialchars($_POST['email']);
     $password = htmlspecialchars($_POST['password']);
 
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-    $stmt->execute([$email]);
-    $user = $stmt->fetch();
-
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['user_id'] = $user['id'];
-        header('Location: rooms.php');
-        exit();
+    // Check if fields are not empty
+    if (empty($email) || empty($password)) {
+        $errors[] = "Both email and password are required.";
     } else {
-        $errors[] = "Invalid credentials"; // Add error to the array
+        // Query the database for user credentials
+        $stmt = $db->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch();
+
+        // Validate user and password
+        if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username']; // Store username in session
+            header('Location: index.php'); // Redirect to the home page
+            exit();
+        } else {
+            $errors[] = "Invalid credentials"; // Add error to the array
+        }
     }
 }
 ?>
@@ -29,79 +36,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <title>Login Page</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 20px;
-        }
-
-        main.container {
-            max-width: 400px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;     
-            align-items: center;        
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-
-        label {
-            margin-top: 10px;
-            display: block;
-            font-weight: bold;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"],
-        button {
-            width: 100%;               
-            max-width: 300px;          
-            padding: 10px;
-            margin-top: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        button {
-            width: auto;               
-            padding: 10px 20px;        
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-            margin-top: 15px;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        p {
-            color: red;
-            text-align: center;
-        }
-
-        /* Error messages */
-        .error-message {
-            color: red;
-            text-align: center;
-        }
+        /* Basic styling for the page */
     </style>
 </head>
 <body>
     <main class="container">
         <h2>Login</h2>
-        <?php if (isset($error)): ?>
-            <p class="error-message"><?= $error ?></p>
+        <?php if (!empty($errors)): ?>
+            <p class="error-message"><?= implode('<br>', $errors) ?></p>
         <?php endif; ?>
         <form method="POST">
             <label for="email">Email:</label>
