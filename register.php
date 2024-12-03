@@ -81,8 +81,86 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pico-css@1.5.2/dist/pico.min.css">
     <title>User Registration</title>
+    <head>
+    <meta charset="UTF-8">
+    <title>User Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        main.container {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;              /* Use flexbox for centering */
+            flex-direction: column;     /* Stack children vertically */
+            align-items: center;        /* Center items horizontally */
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            margin-top: 10px;
+            display: block;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        button {
+            width: 100%;               /* Maintain full width */
+            max-width: 300px;          /* Limit max width for better centering */
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: auto;               /* Allow button to size based on content */
+            padding: 10px 20px;        /* Add extra padding for button */
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        p {
+            color: red;
+            text-align: center;
+        }
+
+        /* Success message */
+        .success-message {
+            color: green;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Error messages */
+        .error-message {
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
 </head>
 <body>
 
