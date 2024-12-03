@@ -2,6 +2,9 @@
 include 'db.php';
 session_start();
 
+$errors = []; // in case of any errors
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = htmlspecialchars($_POST['email']);
     $password = htmlspecialchars($_POST['password']);
@@ -15,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: rooms.php');
         exit();
     } else {
-        $error = "Invalid credentials";
+        $errors[] = "Invalid credentials"; // Add error to the array
     }
 }
 ?>
