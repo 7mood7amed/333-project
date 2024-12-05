@@ -2,7 +2,7 @@
 session_start();
 include 'db.php';
 
-// If the user is logged in, get their username
+// If the user is logged in, get their username and admin status
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
     $username = $_SESSION['username'];
@@ -12,6 +12,12 @@ if (isset($_SESSION['user_id'])) {
     $is_admin = false;
 }
 
+// Debugging output (remove in production)
+echo "<pre>";
+echo "User ID: " . htmlspecialchars($user_id) . "<br>";
+echo "Username: " . htmlspecialchars($username) . "<br>";
+echo "Is Admin: " . ($is_admin ? 'Yes' : 'No') . "<br>";
+echo "</pre>";
 ?>
 
 <!DOCTYPE html>
@@ -94,6 +100,25 @@ if (isset($_SESSION['user_id'])) {
             margin-top: 50px;
         }
 
+        .admin-button {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .button:hover {
+            background-color: #2980b9;
+        }
     </style>
 </head>
 <body>
@@ -109,9 +134,6 @@ if (isset($_SESSION['user_id'])) {
             <span>Hello, <?php echo htmlspecialchars($username); ?>!</span>
             <a href="profile.php">Profile</a> |
             <a href="logout.php">Logout</a>
-            <?php if ($is_admin): ?>
-                <a href="admin_dashboard.php">Admin Panel</a>
-            <?php endif; ?>
         <?php else: ?>
             <a href="login.php">Login</a> |
             <a href="register.php">Register</a>
@@ -129,7 +151,14 @@ if (isset($_SESSION['user_id'])) {
         </div>
     <?php endif; ?>
 
-    <!-- Features Section (Room browsing, Booking, Admin panel) -->
+    <!-- Admin access button -->
+    <div class="admin-button">
+        <?php if ($is_admin): ?>
+            <a href="admin_dashboard.php" class="button">Go to Admin Dashboard</a>
+        <?php endif; ?>
+    </div>
+
+    <!-- Features Section (Room browsing, Booking) -->
     <div class="features">
         <div class="feature-card">
             <h3>Room Browsing</h3>
@@ -144,16 +173,6 @@ if (isset($_SESSION['user_id'])) {
                 <a href="book_room.php">Book a Room</a>
             <?php else: ?>
                 <a href="login.php">Login to Book</a>
-            <?php endif; ?>
-        </div>
-
-        <div class="feature-card">
-            <h3>Admin Panel</h3>
-            <p>If you're an admin, manage rooms, users, and schedules.</p>
-            <?php if ($is_admin): ?>
-                <a href="admin_dashboard.php">Go to Admin Panel</a>
-            <?php else: ?>
-                <a href="login.php">Login as Admin</a>
             <?php endif; ?>
         </div>
     </div>

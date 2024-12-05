@@ -29,7 +29,6 @@ $timeslots = $statement->fetchAll();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room Details</title>
     <style>
         /* Basic styling for the page */
@@ -42,21 +41,11 @@ $timeslots = $statement->fetchAll();
             margin: 0 auto;
             padding: 20px;
         }
-        h1 {
-            text-align: center;
-        }
         .room-details {
             background: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .room-details h2 {
-            margin: 0;
-            font-size: 2em;
-        }
-        .room-details p {
-            margin: 10px 0;
         }
         .timeslot-table {
             width: 100%;
@@ -70,19 +59,16 @@ $timeslots = $statement->fetchAll();
         .timeslot-table th {
             background-color: #f2f2f2;
         }
-        .timeslot-table td {
-            text-align: center;
-        }
     </style>
 </head>
 <body>
-
 <main class="container">
     <div class="room-details">
-        <h2><?php echo htmlspecialchars($room['name']); ?></h2>
+        <h2><?php echo htmlspecialchars($room['room_name']); ?></h2>
         <p><strong>Capacity:</strong> <?php echo htmlspecialchars($room['capacity']); ?> people</p>
         <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($room['description'])); ?></p>
         <p><strong>Equipment:</strong> <?php echo htmlspecialchars($room['equipment']); ?></p>
+        <p><strong>Status:</strong> <?php echo htmlspecialchars($room['status']); ?></p>
 
         <h3>Available Timeslots</h3>
         <?php if (count($timeslots) > 0): ?>
@@ -107,6 +93,5 @@ $timeslots = $statement->fetchAll();
         <?php endif; ?>
     </div>
 </main>
-
 </body>
 </html>
