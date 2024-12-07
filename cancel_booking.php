@@ -39,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = "Failed to cancel the booking. Please try again.";
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -48,24 +47,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cancel Booking</title>
+    <link rel="stylesheet" href="style-index.css">
     <style>
-        /* Styling for the page */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fd;
             margin: 0;
             padding: 0;
         }
         .container {
-            width: 60%;
-            margin: 0 auto;
-            padding: 20px;
+            width: 50%;
+            margin: 50px auto;
+            padding: 30px;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         h1 {
             text-align: center;
+            color: #3498db;
         }
         .form-group {
             margin: 20px 0;
@@ -101,6 +101,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 5px;
             margin-bottom: 20px;
         }
+        a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -120,10 +128,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php else: ?>
         <div class="details">
             <h3>Booking Details</h3>
-            <p><strong>Booking ID:</strong> <?php echo $booking['id']; ?></p>
-            <p><strong>Room:</strong> <?php echo $booking['room_id']; ?></p>
-            <p><strong>Booking Time:</strong> <?php echo $booking['booking_time']; ?></p>
-            <p><strong>Status:</strong> <?php echo $booking['status']; ?></p>
+            <p><strong>Booking ID:</strong> <?php echo htmlspecialchars($booking['id']); ?></p>
+            <p><strong>Room:</strong> <?php echo htmlspecialchars($booking['room_id']); ?></p>
+            <p><strong>Booking Time:</strong> <?php echo htmlspecialchars($booking['booking_time']); ?></p>
+            <p><strong>Status:</strong> <?php echo htmlspecialchars($booking['status']); ?></p>
         </div>
 
         <form action="" method="POST">

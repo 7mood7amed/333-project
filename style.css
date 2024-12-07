@@ -19,10 +19,12 @@ h1, h2 {
     color: #2575fc; /* Unified color theme */
 }
 
+/* Container */
 .container {
     display: flex;
     flex: 1;
     width: 100%;
+    height: 100%;
 }
 
 .left-section {
@@ -118,7 +120,9 @@ button:hover {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+
+/* For smaller screens (tablets and mobile devices) */
+@media (max-width: 1024px) {
     .container {
         flex-direction: column;
     }
@@ -127,11 +131,115 @@ button:hover {
         padding: 20px;
     }
 
+    .left-section h1 {
+        font-size: 2rem;
+    }
+
+    .right-section h2 {
+        font-size: 1.5rem;
+    }
+
+    /* Input fields */
+    input[type="text"], 
+    input[type="email"], 
+    input[type="password"] {
+        font-size: 0.9rem;
+    }
+
+    button {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+}
+
+/* For very small screens (mobile devices) */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
     .left-section {
         padding: 20px;
     }
 
     .right-section {
         padding: 20px;
+    }
+
+    .left-section h1 {
+        font-size: 1.8rem;
+    }
+
+    .right-section h2 {
+        font-size: 1.4rem;
+    }
+
+    /* Input fields */
+    input[type="text"], 
+    input[type="email"], 
+    input[type="password"] {
+        font-size: 0.9rem;
+    }
+
+    button {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+
+    .profile-info, form {
+        padding: 15px;
+    }
+
+    /* Adjust checkbox container */
+    .checkbox-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .checkbox-container input {
+        margin-bottom: 10px;
+    }
+
+    /* Login link */
+    .login-link {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .login-link a {
+        color: #2575fc;
+        text-decoration: none;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+}
+
+/* For extra small screens (very small mobile devices) */
+@media (max-width: 480px) {
+    .left-section h1 {
+        font-size: 1.6rem;
+    }
+
+    .right-section h2 {
+        font-size: 1.2rem;
+    }
+
+    /* Input fields */
+    input[type="text"], 
+    input[type="email"], 
+    input[type="password"] {
+        font-size: 0.85rem;
+    }
+
+    button {
+        font-size: 0.85rem;
+        padding: 6px 14px;
+    }
+
+    /* Adjust padding in forms */
+    .profile-info, form {
+        padding: 10px;
     }
 }

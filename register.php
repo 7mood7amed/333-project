@@ -97,9 +97,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             </div>
             <div class="button-container">
                 <button type="submit" class="btn-primary">Sign up</button>
-                <button type="button" class="btn-secondary">Sign in</button>
             </div>
         </form>
+
+        <!-- Link to the login page -->
+        <div class="login-link">
+            <p>Already have an account? <a href="login.php">Sign in</a></p>
+        </div>
 
         <?php if (!empty($errors)): ?>
             <div style="color: red;">

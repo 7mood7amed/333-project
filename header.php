@@ -1,26 +1,35 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 include 'db.php';
 
 // Check if the user is logged in
 $is_logged_in = isset($_SESSION['user_id']);
 $username = $is_logged_in ? $_SESSION['username'] : '';
-$user_profile_picture = $is_logged_in ? $_SESSION['profile_picture'] : '';
+$user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && !empty($_SESSION['profile_picture']) 
+    ? $_SESSION['profile_picture'] 
+    : 'default.png'; // Fallback to 'default.png'
 ?>
 
 <header>
     <div class="header-container">
         <div class="logo">
-            <img src="path/to/your/logo.png" alt="Logo" style="height: 50px;"> <!-- Placeholder for logo -->
+            <img src="assets/logo.png" alt="Logo" class="logo-img"> <!-- Dynamic logo path -->
         </div>
         <nav>
             <a href="index.php">Home</a>
             <a href="browse_rooms.php">Browse Rooms</a>
             <a href="book_room.php">Book a Room</a>
+            <?php if ($is_logged_in): ?>
+                <a href="profile.php">My Profile</a> <!-- Link to user profile page -->
+            <?php endif; ?>
         </nav>
         <div class="user-options">
             <?php if ($is_logged_in): ?>
-                <img src="uploads/<?php echo htmlspecialchars($user_profile_picture ?: 'default.png'); ?>" alt="Profile Picture" class="profile-pic">
+                <a href="profile.php">
+                    <img src="uploads/<?php echo htmlspecialchars($user_profile_picture); ?>" alt="Profile Picture" class="profile-pic">
+                </a>
             <?php else: ?>
                 <a href="login.php" class="button">Login</a>
                 <a href="register.php" class="button">Register</a>
@@ -28,7 +37,6 @@ $user_profile_picture = $is_logged_in ? $_SESSION['profile_picture'] : '';
         </div>
     </div>
 </header>
-
 <style>
     /* Header Styles */
     .header-container {
@@ -40,8 +48,8 @@ $user_profile_picture = $is_logged_in ? $_SESSION['profile_picture'] : '';
         color: white;
     }
 
-    .logo img {
-        height: 50px; /* Adjust logo height */
+    .logo-img {
+        height: 50px;
     }
 
     nav {
@@ -53,6 +61,7 @@ $user_profile_picture = $is_logged_in ? $_SESSION['profile_picture'] : '';
         color: white;
         padding: 10px 15px;
         text-decoration: none;
+        display: inline-block;
     }
 
     nav a:hover {
@@ -83,5 +92,31 @@ $user_profile_picture = $is_logged_in ? $_SESSION['profile_picture'] : '';
 
     .button:hover {
         background-color: #1a5276;
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+        .header-container {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        nav {
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        .user-options {
+            margin-top: 10px;
+        }
+
+        .profile-pic {
+            width: 35px;
+            height: 35px;
+        }
+
+        .button {
+            margin-top: 5px;
+        }
     }
 </style>

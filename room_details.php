@@ -25,44 +25,124 @@ $statement = $db->prepare($query);
 $statement->execute([$room_id]);
 $timeslots = $statement->fetchAll();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Room Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Details - Room Booking System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Basic styling for the page */
+        /* General Styling */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            color: #333;
         }
+
+        header {
+            background-color: #3498db;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
         .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px;
         }
+
         .room-details {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 800px;
         }
+
+        .room-details h2 {
+            font-size: 28px;
+            color: #3498db;
+            margin-bottom: 20px;
+        }
+
+        .room-details p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .room-details strong {
+            color: #3498db;
+        }
+
         .timeslot-table {
             width: 100%;
-            margin-top: 20px;
             border-collapse: collapse;
+            margin-top: 20px;
         }
-        .timeslot-table th, .timeslot-table td {
-            padding: 10px;
+
+        .timeslot-table th,
+        .timeslot-table td {
+            padding: 12px;
+            text-align: left;
             border: 1px solid #ddd;
         }
+
         .timeslot-table th {
             background-color: #f2f2f2;
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+            }
+
+            .room-details {
+                width: 90%;
+                padding: 20px;
+            }
+
+            .room-details h2 {
+                font-size: 24px;
+            }
+
+            .room-details p {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
-<main class="container">
+
+<header>
+    <h1>Room Details</h1>
+</header>
+
+<div class="container">
     <div class="room-details">
         <h2><?php echo htmlspecialchars($room['room_name']); ?></h2>
         <p><strong>Capacity:</strong> <?php echo htmlspecialchars($room['capacity']); ?> people</p>
@@ -92,6 +172,11 @@ $timeslots = $statement->fetchAll();
             <p>No available timeslots for this room.</p>
         <?php endif; ?>
     </div>
-</main>
+</div>
+
+<footer>
+    <p>&copy; 2024 Room Booking System. All rights reserved.</p>
+</footer>
+
 </body>
 </html>
