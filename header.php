@@ -24,9 +24,11 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
             <?php if ($is_logged_in): ?>
                 <a href="profile.php">My Profile</a> <!-- Link to user profile page -->
             <?php endif; ?>
+            <a href="my_bookings.php" class="button">My Bookings</a>
         </nav>
         <div class="user-options">
             <?php if ($is_logged_in): ?>
+                <!-- Add a "View My Bookings" button -->
                 <a href="profile.php">
                     <img src="uploads/<?php echo htmlspecialchars($user_profile_picture); ?>" alt="Profile Picture" class="profile-pic">
                 </a>
@@ -37,6 +39,7 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
         </div>
     </div>
 </header>
+
 <style>
     /* Header Styles */
     .header-container {
@@ -71,6 +74,11 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
     .user-options {
         display: flex;
         align-items: center;
+        justify-content: flex-start; /* Align items to the left */
+    }
+
+    .user-options a.button {
+        margin-left: 10px; /* Add space between buttons */
     }
 
     .profile-pic {

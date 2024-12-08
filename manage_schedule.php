@@ -1,6 +1,10 @@
 <?php
 include 'db.php';
-session_start();
+include 'header.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Check if user is logged in and is an admin
 if (!isset($_SESSION['user_id']) || !$_SESSION['is_admin']) {

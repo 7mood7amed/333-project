@@ -19,11 +19,17 @@ if (!$room) {
     die("Room not found.");
 }
 
-// Fetch available timeslots for the room
-$query = "SELECT * FROM timeslots WHERE room_id = ? ORDER BY start_time";
+// Fetch available time slots for the room
+$query = "
+    SELECT s.id, s.booking_date, s.start_time, s.end_time 
+    FROM schedules s 
+    WHERE s.room_id = :room_id
+    ORDER BY s.booking_date, s.start_time
+";
 $statement = $db->prepare($query);
-$statement->execute([$room_id]);
-$timeslots = $statement->fetchAll();
+$statement->bindParam(':room_id', $room_id, PDO::PARAM_INT);
+$statement->execute();
+$schedules = $statement->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -32,43 +38,45 @@ $timeslots = $statement->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room Details - Room Booking System</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style-index.css">
     <style>
-        /* General Styling */
+        /* Global Styles */
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f0f4f8;
+            background-color: #f8f9fd;
             margin: 0;
             padding: 0;
-            color: #333;
-        }
-
-        header {
-            background-color: #3498db;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 32px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
         }
 
         .container {
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 40px;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #3498db;
+            color: white;
+            padding: 20px;
+            width: 100%;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
         }
 
         .room-details {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background: #fff;
             padding: 30px;
             width: 100%;
-            max-width: 800px;
+            max-width: 1200px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
         .room-details h2 {
@@ -78,71 +86,86 @@ $timeslots = $statement->fetchAll();
         }
 
         .room-details p {
-            font-size: 18px;
-            margin: 10px 0;
+            font-size: 16px;
+            color: #333;
         }
 
-        .room-details strong {
-            color: #3498db;
-        }
-
-        .timeslot-table {
+        table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 30px;
         }
 
-        .timeslot-table th,
-        .timeslot-table td {
-            padding: 12px;
-            text-align: left;
+        table th, table td {
+            padding: 15px;
+            text-align: center;
             border: 1px solid #ddd;
         }
 
-        .timeslot-table th {
-            background-color: #f2f2f2;
-        }
-
-        footer {
-            background-color: #2c3e50;
+        table th {
+            background-color: #3498db;
             color: white;
-            text-align: center;
-            padding: 15px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
         }
 
-        /* Mobile Responsiveness */
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                align-items: center;
-                padding: 20px;
-            }
+        table td {
+            background-color: #fff;
+        }
 
+        table tr:nth-child(even) td {
+            background-color: #f9f9f9;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
             .room-details {
-                width: 90%;
-                padding: 20px;
+                padding: 15px;
+                margin: 10px;
             }
 
             .room-details h2 {
                 font-size: 24px;
             }
 
-            .room-details p {
-                font-size: 16px;
+            table th, table td {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 15px;
+                font-size: 20px;
+            }
+
+            table th, table td {
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            .room-details h2 {
+                font-size: 20px;
             }
         }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>Room Details</h1>
-</header>
-
 <div class="container">
+    <div class="header">
+        <h1>Room Details</h1>
+    </div>
+
     <div class="room-details">
         <h2><?php echo htmlspecialchars($room['room_name']); ?></h2>
         <p><strong>Capacity:</strong> <?php echo htmlspecialchars($room['capacity']); ?> people</p>
@@ -150,33 +173,35 @@ $timeslots = $statement->fetchAll();
         <p><strong>Equipment:</strong> <?php echo htmlspecialchars($room['equipment']); ?></p>
         <p><strong>Status:</strong> <?php echo htmlspecialchars($room['status']); ?></p>
 
-        <h3>Available Timeslots</h3>
-        <?php if (count($timeslots) > 0): ?>
-            <table class="timeslot-table">
-                <thead>
-                    <tr>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($timeslots as $timeslot): ?>
+        <h3>Available Time Slots</h3>
+        <?php if (count($schedules) > 0): ?>
+            <div class="table-container">
+                <table>
+                    <thead>
                         <tr>
-                            <td><?php echo date("Y-m-d H:i", strtotime($timeslot['start_time'])); ?></td>
-                            <td><?php echo date("Y-m-d H:i", strtotime($timeslot['end_time'])); ?></td>
+                            <th>ID</th>
+                            <th>Booking Date</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($schedules as $schedule): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($schedule['id']); ?></td>
+                                <td><?php echo htmlspecialchars($schedule['booking_date']); ?></td>
+                                <td><?php echo htmlspecialchars($schedule['start_time']); ?></td>
+                                <td><?php echo htmlspecialchars($schedule['end_time']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
         <?php else: ?>
-            <p>No available timeslots for this room.</p>
+            <p>No available time slots for this room.</p>
         <?php endif; ?>
     </div>
 </div>
-
-<footer>
-    <p>&copy; 2024 Room Booking System. All rights reserved.</p>
-</footer>
 
 </body>
 </html>

@@ -1,6 +1,8 @@
 <?php
 session_start();
 include 'db.php';
+include 'header.php';
+
 
 // Fetch only available rooms
 $query = "SELECT * FROM rooms WHERE status = 'available'";

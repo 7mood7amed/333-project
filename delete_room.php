@@ -1,6 +1,8 @@
 <?php
 session_start();
 include 'db.php';
+include 'header.php';
+
 
 // Ensure the user is logged in and is an admin
 if (!isset($_SESSION['user_id']) || $_SESSION['is_admin'] !== true) {
