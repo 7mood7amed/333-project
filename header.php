@@ -12,11 +12,11 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
     : 'default.png'; // Fallback to 'default.png'
 ?>
 
-<header>
+<header style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;">
     <div class="header-container">
         <div class="logo">
             <a href="index.php">
-                <img src="assets/logo.png" alt="Logo" class="logo-img">
+                <img src="img/ItRoom-Logo.png" alt="Logo" class="logo-img">
             </a>
         </div>
         <nav>
@@ -215,4 +215,5 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
             margin-top: 5px;
         }
     }
+body { overflow-x: hidden; }
 </style>
