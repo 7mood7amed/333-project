@@ -3,7 +3,6 @@ session_start();
 include 'db.php';
 include 'header.php';
 
-
 // Ensure user is admin
 if (!isset($_SESSION['user_id']) || !$_SESSION['is_admin']) {
     die("Unauthorized access.");
@@ -61,70 +60,142 @@ $statement = $db->prepare($query);
 $statement->execute();
 $rooms = $statement->fetchAll();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Rooms</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fd;
+        /* General Reset */
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
-        .container {
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0f7fa;
             display: flex;
-            height: 100vh;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
-        aside {
-            width: 20%;
-            background: #fff;
-            padding: 20px;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: #3498db;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: fadeInDown 1s ease-in-out;
         }
-        aside .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #e74c3c;
-            margin-bottom: 30px;
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            color: white;
         }
-        aside .menu a {
+
+        .logo-img {
+            height: 50px;
+            animation: fadeInLeft 1.5s ease;
+        }
+
+        nav {
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            transform: translateY(-3px);
+            background-color: #2980b9;
+            border-radius: 5px;
+        }
+
+        .user-options {
             display: flex;
             align-items: center;
+        }
+
+        .user-options a.button {
+            margin-left: 10px;
+            padding: 10px 15px;
+            background-color: #2980b9;
+            color: white;
             text-decoration: none;
-            color: #555;
-            font-size: 16px;
-            margin-bottom: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            transition: background 0.3s;
+            border-radius: 5px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
         }
-        aside .menu a.active, aside .menu a:hover {
-            background-color: #f2f2f2;
+
+        .user-options a.button:hover {
+            background-color: #1a5276;
+            transform: translateY(-3px);
         }
-        aside .menu a i {
-            margin-right: 10px;
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 10px;
+            transition: transform 0.3s ease;
         }
-        main {
-            width: 80%;
-            padding: 30px;
-            overflow-y: auto;
+
+        .profile-pic:hover {
+            transform: scale(1.1);
         }
-        main h1 {
-            font-size: 28px;
-            font-weight: bold;
+
+        .logout-button {
+            margin-left: 10px;
+            padding: 10px 15px;
+            background-color: #e74c3c;  /* Red color */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background-color: #c0392b;  /* Darker red on hover */
+            transform: translateY(-3px);
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h1 {
+            font-size: 2.5rem;
             margin-bottom: 20px;
+            color: #2575fc;
+            animation: bounceIn 1.5s ease;
         }
+
         .form-container {
-            background: #fff;
+            background: #ffffff;  
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
+            animation: fadeInUp 1.2s ease;
         }
+
         .form-container input, .form-container select, .form-container button {
             width: 100%;
             padding: 10px;
@@ -132,25 +203,30 @@ $rooms = $statement->fetchAll();
             border-radius: 8px;
             border: 1px solid #ccc;
         }
+
         .form-container button {
             background-color: #3498db;
-            color: #fff;
+            color: white;
             border: none;
             cursor: pointer;
         }
+
         .form-container button:hover {
             background-color: #2980b9;
         }
+
         .room-list {
-            background: #fff;
+            background: #ffffff;  
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
         .room-list ul {
             list-style: none;
             padding: 0;
         }
+
         .room-list ul li {
             padding: 10px;
             border-bottom: 1px solid #eee;
@@ -158,28 +234,83 @@ $rooms = $statement->fetchAll();
             justify-content: space-between;
             align-items: center;
         }
+
         .room-list ul li a {
             color: #3498db;
             text-decoration: none;
         }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #2c3e50;
+            color: white;
+            margin-top: auto;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <aside>
-        <div class="logo">C <span style="color: #e74c3c;">BABAR</span></div>
-        <div class="menu">
-            <a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a href="#" class="active"><i class="fas fa-door-open"></i> Manage Rooms</a>
-            <a href="manage_schedule.php"><i class="fas fa-calendar-alt"></i> Room Schedule</a>
-            <a href="manage_users.php"><i class="fas fa-users"></i> Manage Users</a>
-            <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
-        </div>
-    </aside>
-    <main>
+    
+    <div class="container">
         <h1>Manage Rooms</h1>
-        
+
         <!-- Add Room Form -->
         <div class="form-container">
             <form method="POST">
@@ -207,8 +338,6 @@ $rooms = $statement->fetchAll();
                 <?php endforeach; ?>
             </ul>
         </div>
-    </main>
-</div>
-
+    </div>
 </body>
 </html>

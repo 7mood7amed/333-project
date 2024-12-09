@@ -145,6 +145,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     <?php endif; ?>
 </div>
-
+<script src="js/scripts.js"></script>
 </body>
 </html>

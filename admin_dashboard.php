@@ -16,24 +16,17 @@ if (!isset($_SESSION['user_id']) || $_SESSION['is_admin'] !== true) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* General Styling */
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f8f9fd;
             margin: 0;
             padding: 0;
-            color: #333;
         }
-
-        /* Container */
         .container {
             display: flex;
             height: 100vh;
         }
-
-        /* Sidebar Styling */
         aside {
             width: 20%;
             background: #fff;
@@ -63,8 +56,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['is_admin'] !== true) {
         aside .menu a i {
             margin-right: 10px;
         }
-
-        /* Main Section */
         main {
             width: 80%;
             padding: 30px;

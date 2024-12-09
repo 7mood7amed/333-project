@@ -152,6 +152,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">Update Room</button>
     </form>
 </div>
-
+<script src="js/scripts.js"></script>
 </body>
 </html>

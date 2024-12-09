@@ -15,23 +15,25 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
 <header>
     <div class="header-container">
         <div class="logo">
-            <img src="assets/logo.png" alt="Logo" class="logo-img"> <!-- Dynamic logo path -->
+            <a href="index.php">
+                <img src="assets/logo.png" alt="Logo" class="logo-img">
+            </a>
         </div>
         <nav>
             <a href="index.php">Home</a>
             <a href="browse_rooms.php">Browse Rooms</a>
             <a href="book_room.php">Book a Room</a>
             <?php if ($is_logged_in): ?>
-                <a href="profile.php">My Profile</a> <!-- Link to user profile page -->
+                <a href="profile.php">My Profile</a>
             <?php endif; ?>
             <a href="my_bookings.php" class="button">My Bookings</a>
         </nav>
         <div class="user-options">
             <?php if ($is_logged_in): ?>
-                <!-- Add a "View My Bookings" button -->
                 <a href="profile.php">
-                    <img src="uploads/<?php echo htmlspecialchars($user_profile_picture); ?>" alt="Profile Picture" class="profile-pic">
+                    <img src="uploads/<?php echo htmlspecialchars($_SESSION['profile_picture'] ?? 'default.png'); ?>" alt="Profile Picture" class="profile-pic">
                 </a>
+                <a href="logout.php" class="button logout-button">Logout</a>
             <?php else: ?>
                 <a href="login.php" class="button">Login</a>
                 <a href="register.php" class="button">Register</a>
@@ -41,18 +43,42 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
 </header>
 
 <style>
-    /* Header Styles */
+    /* General Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #e0f7fa;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background-color: #3498db;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        animation: fadeInDown 1s ease-in-out;
+    }
+
     .header-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background-color: #3498db;
-        padding: 10px 20px;
+        padding: 15px 20px;
         color: white;
     }
 
     .logo-img {
         height: 50px;
+        animation: fadeInLeft 1.5s ease;
     }
 
     nav {
@@ -65,20 +91,33 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
         padding: 10px 15px;
         text-decoration: none;
         display: inline-block;
+        transition: transform 0.3s ease, background-color 0.3s ease;
     }
 
     nav a:hover {
+        transform: translateY(-3px);
         background-color: #2980b9;
+        border-radius: 5px;
     }
 
     .user-options {
         display: flex;
         align-items: center;
-        justify-content: flex-start; /* Align items to the left */
     }
 
     .user-options a.button {
-        margin-left: 10px; /* Add space between buttons */
+        margin-left: 10px;
+        padding: 10px 15px;
+        background-color: #2980b9;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    .user-options a.button:hover {
+        background-color: #1a5276;
+        transform: translateY(-3px);
     }
 
     .profile-pic {
@@ -86,20 +125,50 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
         height: 40px;
         border-radius: 50%;
         margin-left: 10px;
+        transition: transform 0.3s ease;
     }
 
-    .button {
-        background-color: #2980b9;
-        color: white;
-        padding: 10px 15px;
-        border: none;
-        border-radius: 5px;
-        text-decoration: none;
+    .profile-pic:hover {
+        transform: scale(1.1);
+    }
+
+    /* Red Logout Button */
+    .logout-button {
         margin-left: 10px;
+        padding: 10px 15px;
+        background-color: ##e74c3c;;  /* Red color */
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: transform 0.3s ease, background-color 0.3s ease;
     }
 
-    .button:hover {
-        background-color: #1a5276;
+    .logout-button:hover {
+        background-color: #c0392b;  /* Darker red on hover */
+        transform: translateY(-3px);
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
     }
 
     /* Mobile Responsiveness */

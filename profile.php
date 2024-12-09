@@ -125,6 +125,6 @@ if (!$user) {
         <a href="edit_profile.php" class="button">Edit Profile</a>
     </div>
 </main>
-
+<script src="js/scripts.js"></script>
 </body>
 </html>

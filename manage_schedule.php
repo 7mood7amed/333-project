@@ -230,6 +230,6 @@ $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </table>
     </div>
 </div>
-
+<script src="js/scripts.js"></script>
 </body>
 </html>

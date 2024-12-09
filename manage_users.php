@@ -222,6 +222,6 @@ if (isset($_GET['delete_user'])) {
         </tbody>
     </table>
 </main>
-
+<script src="js/scripts.js"></script>
 </body>
 </html>

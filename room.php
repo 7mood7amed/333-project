@@ -3,7 +3,6 @@ session_start();
 include 'db.php';
 include 'header.php';
 
-
 // Fetch only available rooms
 $query = "SELECT * FROM rooms WHERE status = 'available'";
 $statement = $db->prepare($query);
@@ -16,10 +15,21 @@ $rooms = $statement->fetchAll();
     <meta charset="UTF-8">
     <title>Available Rooms</title>
     <style>
-        /* Basic styling for the page */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #ff6600;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            color: #fff;
+            margin: 0;
         }
         .container {
             max-width: 900px;
@@ -32,12 +42,32 @@ $rooms = $statement->fetchAll();
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .room-card:hover {
+            transform: scale(1.05);
+        }
+        .room-card h2 {
+            color: #ff6600;
+            font-size: 24px;
+        }
+        .room-card a {
+            text-decoration: none;
+            color: #ff6600;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+        .room-card a:hover {
+            color: #000;
         }
     </style>
 </head>
 <body>
-<main class="container">
+<header>
     <h1>Available Rooms</h1>
+</header>
+<main class="container">
     <div class="room-list">
         <?php foreach ($rooms as $room): ?>
             <div class="room-card">

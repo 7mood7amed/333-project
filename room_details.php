@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'db.php';
+include 'header.php';
 
 // Check if the room ID is provided
 if (!isset($_GET['id'])) {
@@ -38,51 +39,124 @@ $schedules = $statement->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room Details - Room Booking System</title>
-    <link rel="stylesheet" href="style-index.css">
     <style>
-        /* Global Styles */
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fd;
+        /* General Reset */
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #e0f7fa;
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: #3498db;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            color: white;
+        }
+
+        .logo-img {
+            height: 50px;
+            animation: fadeInLeft 1.5s ease;
+        }
+
+        nav {
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            transform: translateY(-3px);
+            background-color: #2980b9;
+            border-radius: 5px;
+        }
+
+        .user-options {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-options a.button {
+            margin-left: 10px;
+            padding: 10px 15px;
+            background-color: #2980b9;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .user-options a.button:hover {
+            background-color: #1a5276;
+            transform: translateY(-3px);
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.1);
         }
 
         .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 1;
-            padding: 20px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
         }
 
-        .header {
-            background-color: #3498db;
-            color: white;
-            padding: 20px;
-            width: 100%;
+        header h1 {
             text-align: center;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            color: #fff;
+            animation: bounceIn 1.5s ease;
         }
 
         .room-details {
             background: #fff;
             padding: 30px;
-            width: 100%;
-            max-width: 1200px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
 
         .room-details h2 {
-            font-size: 28px;
             color: #3498db;
-            margin-bottom: 20px;
+            font-size: 28px;
         }
 
         .room-details p {
@@ -93,10 +167,10 @@ $schedules = $statement->fetchAll();
         table {
             width: 100%;
             border-collapse: collapse;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             overflow: hidden;
-            margin-top: 30px;
+            margin-top: 20px;
         }
 
         table th, table td {
@@ -118,54 +192,66 @@ $schedules = $statement->fetchAll();
             background-color: #f9f9f9;
         }
 
-        .table-container {
-            width: 100%;
-            overflow-x: auto;
-            display: flex;
-            justify-content: center;
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #2c3e50;
+            color: white;
+            margin-top: 50px;
         }
 
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .room-details {
-                padding: 15px;
-                margin: 10px;
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
             }
-
-            .room-details h2 {
-                font-size: 24px;
-            }
-
-            table th, table td {
-                padding: 10px;
-                font-size: 14px;
+            to {
+                opacity: 1;
             }
         }
 
-        @media (max-width: 480px) {
-            .header {
-                padding: 15px;
-                font-size: 20px;
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
             }
-
-            table th, table td {
-                padding: 8px;
-                font-size: 12px;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
+        }
 
-            .room-details h2 {
-                font-size: 20px;
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
             }
         }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <div class="header">
-        <h1>Room Details</h1>
-    </div>
-
+<header>
+    <h1>Room Details</h1>
+</header>
+<main class="container">
     <div class="room-details">
         <h2><?php echo htmlspecialchars($room['room_name']); ?></h2>
         <p><strong>Capacity:</strong> <?php echo htmlspecialchars($room['capacity']); ?> people</p>
@@ -175,33 +261,33 @@ $schedules = $statement->fetchAll();
 
         <h3>Available Time Slots</h3>
         <?php if (count($schedules) > 0): ?>
-            <div class="table-container">
-                <table>
-                    <thead>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Booking Date</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($schedules as $schedule): ?>
                         <tr>
-                            <th>ID</th>
-                            <th>Booking Date</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
+                            <td><?php echo htmlspecialchars($schedule['id']); ?></td>
+                            <td><?php echo htmlspecialchars($schedule['booking_date']); ?></td>
+                            <td><?php echo htmlspecialchars($schedule['start_time']); ?></td>
+                            <td><?php echo htmlspecialchars($schedule['end_time']); ?></td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($schedules as $schedule): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($schedule['id']); ?></td>
-                                <td><?php echo htmlspecialchars($schedule['booking_date']); ?></td>
-                                <td><?php echo htmlspecialchars($schedule['start_time']); ?></td>
-                                <td><?php echo htmlspecialchars($schedule['end_time']); ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         <?php else: ?>
             <p>No available time slots for this room.</p>
         <?php endif; ?>
     </div>
-</div>
-
+</main>
+<footer>
+    <p>&copy; 2024 Room Booking System. All rights reserved.</p>
+</footer>
 </body>
 </html>
