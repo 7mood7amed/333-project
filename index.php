@@ -34,7 +34,6 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
             min-height: 100vh;
             overflow-x: hidden;
             background: linear-gradient(135deg, #74ebd5, #acb6e5);
-            animation: backgroundShift 10s infinite alternate;
         }
 
         header {
@@ -43,7 +42,6 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
             z-index: 1000;
             background-color: #3498db;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            animation: fadeInDown 1s ease-in-out;
         }
 
         .header-container {
@@ -52,11 +50,11 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
             align-items: center;
             padding: 15px 20px;
             color: white;
+            flex-wrap: wrap;
         }
 
         .logo-img {
             height: 50px;
-            animation: fadeInLeft 1.5s ease;
         }
 
         nav {
@@ -81,6 +79,7 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
         .user-options {
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .user-options a.button {
@@ -110,45 +109,36 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
             transform: scale(1.1);
         }
 
-        /* Red Logout Button */
-        .logout-button {
-            margin-left: 10px;
-            padding: 10px 15px;
-            background-color: ##e74c3c;;  /* Red color */
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-        }
+        .hero-section {
+    position: relative;
+    text-align: center;
+    padding: 100px 20px;
+    background-image: url('img/bac.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    height: 500px;
+}
 
-        .logout-button:hover {
-            background-color: #e74c3c;;  /* Darker red on hover */
-            transform: translateY(-3px);
-        }
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1; 
+}
 
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
-            animation: fadeIn 1s ease-in-out;
-        }
+.hero-section h1, .hero-section p {
+    position: relative;
+    z-index: 2;
+}
 
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            color: #2575fc;
-            animation: bounceIn 1.5s ease;
-        }
 
-        .welcome-message {
-            text-align: center;
-            margin-bottom: 20px;
-            background: #ffffff;  /* Keep white background for the message */
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            animation: fadeInUp 1.2s ease;
+        .hero-section p {
+            font-size: 1.2rem;
         }
 
         .features {
@@ -156,22 +146,31 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
             flex-wrap: wrap;
             gap: 20px;
             justify-content: center;
+            margin: 20px auto;
+            padding: 0 20px;
         }
 
         .feature-card {
             width: 300px;
-            background: #ffffff;  /* Keep white background for the feature cards */
+            background: #ffffff;
             padding: 20px;
             border-radius: 8px;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: zoomIn 1.2s ease;
         }
 
         .feature-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
         }
 
         .feature-card h3 {
@@ -206,79 +205,6 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
             color: white;
             margin-top: auto;
         }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes zoomIn {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @keyframes backgroundShift {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
-        }
-
-        @keyframes bounceIn {
-            0% {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-            60% {
-                transform: scale(1.1);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
     </style>
 </head>
 <body>
@@ -286,7 +212,7 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
         <div class="header-container">
             <div class="logo">
                 <a href="index.php">
-                    <img src="assets/logo.png" alt="Logo" class="logo-img">
+                    <img src="img/ItRoom-Logo.png" alt="Logo" class="logo-img">
                 </a>
             </div>
             <nav>
@@ -296,7 +222,6 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
                 <?php if ($is_logged_in): ?>
                     <a href="profile.php">My Profile</a>
                     <a href="my_bookings.php" class="button">My Bookings</a>
-                    <!-- Admin Dashboard button, visible only to admins -->
                     <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
                         <a href="admin_dashboard.php" class="button">Admin Dashboard</a>
                     <?php endif; ?>
@@ -316,30 +241,24 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
         </div>
     </header>
 
-    <div class="container">
+    <div class="hero-section">
         <h1>Welcome to the Room Booking System</h1>
-        <div class="welcome-message">
-            <?php if ($is_logged_in): ?>
-                <p>Welcome back, <?php echo htmlspecialchars($username); ?>! Start browsing rooms or manage your bookings.</p>
-            <?php else: ?>
-                <p>Please log in or register to start booking rooms!</p>
-            <?php endif; ?>
-        </div>
+        <p>Find and book the perfect room for your events and meetings with ease.</p>
+    </div>
 
+    <div class="container">
         <section class="features">
             <div class="feature-card">
+                <img src="img/b1.jpg" alt="Room Browsing">
                 <h3>Room Browsing</h3>
-                <p>Browse available rooms and check their details including capacity and equipment.</p>
+                <p>Explore available rooms, check capacity, and view details with ease.</p>
                 <a href="browse_rooms.php">Browse Rooms</a>
             </div>
             <div class="feature-card">
+                <img src="img/b2.jpg" alt="Book a Room">
                 <h3>Book a Room</h3>
-                <p>Book rooms for meetings, events, and more. Manage your bookings.</p>
-                <?php if ($is_logged_in): ?>
-                    <a href="book_room.php">Book a Room</a>
-                <?php else: ?>
-                    <a href="login.php">Login to Book</a>
-                <?php endif; ?>
+                <p>Reserve rooms for meetings, conferences, or personal events in just a few clicks.</p>
+                <a href="book_room.php">Book Now</a>
             </div>
         </section>
     </div>
