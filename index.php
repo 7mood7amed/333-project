@@ -33,6 +33,8 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
             flex-direction: column;
             min-height: 100vh;
             overflow-x: hidden;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            animation: backgroundShift 10s infinite alternate;
         }
 
         header {
@@ -257,6 +259,11 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
                 opacity: 1;
                 transform: scale(1);
             }
+        }
+
+        @keyframes backgroundShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
         }
 
         @keyframes bounceIn {

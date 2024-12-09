@@ -2,6 +2,7 @@
 session_start();
 include 'db.php';
 include 'header.php';
+include 'sidebar.php';
 
 // Ensure user is admin
 if (!isset($_SESSION['user_id']) || !$_SESSION['is_admin']) {
@@ -68,7 +69,6 @@ $rooms = $statement->fetchAll();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Rooms</title>
     <style>
-        /* General Reset */
         * {
             margin: 0;
             padding: 0;
@@ -79,97 +79,49 @@ $rooms = $statement->fetchAll();
             font-family: Arial, sans-serif;
             background-color: #e0f7fa;
             display: flex;
-            flex-direction: column;
             min-height: 100vh;
             overflow-x: hidden;
+            padding-top: 70px; /* Ensure there's space for the sticky header */
+        }
+        
+
+        /* Sidebar Styling */
+        aside {
+            width: 20%;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            height: 100vh; /* Ensure sidebar takes full height */
+            position: fixed;
         }
 
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background-color: #3498db;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            animation: fadeInDown 1s ease-in-out;
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 30px;
         }
 
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            color: white;
-        }
-
-        .logo-img {
-            height: 50px;
-            animation: fadeInLeft 1.5s ease;
-        }
-
-        nav {
-            flex-grow: 1;
-            text-align: center;
-        }
-
-        nav a {
-            color: white;
-            padding: 10px 15px;
-            text-decoration: none;
-            display: inline-block;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-        }
-
-        nav a:hover {
-            transform: translateY(-3px);
-            background-color: #2980b9;
-            border-radius: 5px;
-        }
-
-        .user-options {
+        .menu a {
             display: flex;
             align-items: center;
-        }
-
-        .user-options a.button {
-            margin-left: 10px;
-            padding: 10px 15px;
-            background-color: #2980b9;
-            color: white;
             text-decoration: none;
-            border-radius: 5px;
-            transition: transform 0.3s ease, background-color 0.3s ease;
+            color: #555;
+            font-size: 16px;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background 0.3s;
         }
 
-        .user-options a.button:hover {
-            background-color: #1a5276;
-            transform: translateY(-3px);
+        .menu a.active, .menu a:hover {
+            background-color: #f2f2f2;
         }
 
-        .profile-pic {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-left: 10px;
-            transition: transform 0.3s ease;
-        }
-
-        .profile-pic:hover {
-            transform: scale(1.1);
-        }
-
-        .logout-button {
-            margin-left: 10px;
-            padding: 10px 15px;
-            background-color: #e74c3c;  /* Red color */
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-        }
-
-        .logout-button:hover {
-            background-color: #c0392b;  /* Darker red on hover */
-            transform: translateY(-3px);
+        main {
+            width: 80%;
+            padding: 30px;
+            margin-left: 20%;
         }
 
         .container {
@@ -177,14 +129,12 @@ $rooms = $statement->fetchAll();
             flex-direction: column;
             align-items: center;
             padding: 40px 20px;
-            animation: fadeIn 1s ease-in-out;
         }
 
         h1 {
             font-size: 2.5rem;
             margin-bottom: 20px;
             color: #2575fc;
-            animation: bounceIn 1.5s ease;
         }
 
         .form-container {
@@ -193,7 +143,6 @@ $rooms = $statement->fetchAll();
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
-            animation: fadeInUp 1.2s ease;
         }
 
         .form-container input, .form-container select, .form-container button {
@@ -247,97 +196,45 @@ $rooms = $statement->fetchAll();
             color: white;
             margin-top: auto;
         }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes bounceIn {
-            0% {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-            60% {
-                transform: scale(1.1);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
     </style>
 </head>
 <body>
-    
-    <div class="container">
-        <h1>Manage Rooms</h1>
 
-        <!-- Add Room Form -->
-        <div class="form-container">
-            <form method="POST">
-                <input type="text" name="room_name" placeholder="Room Name" required>
-                <input type="number" name="capacity" placeholder="Capacity" required>
-                <input type="text" name="equipment" placeholder="Equipment" required>
-                <select name="status">
-                    <option value="available">Available</option>
-                    <option value="not available">Not Available</option>
-                </select>
-                <button type="submit" name="add_room">Add Room</button>
-            </form>
-        </div>
+    <!-- Sidebar (included from sidebar.php) -->
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <h1>Manage Rooms</h1>
 
-        <!-- Room List -->
-        <div class="room-list">
-            <h2>Existing Rooms</h2>
-            <ul>
-                <?php foreach ($rooms as $room): ?>
-                    <li>
-                        <?php echo htmlspecialchars($room['room_name']); ?> - 
-                        <?php echo htmlspecialchars($room['status']); ?> 
-                        <a href="?change_status=true&id=<?php echo $room['id']; ?>&status=<?php echo $room['status']; ?>">Change Status</a>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
+            <!-- Add Room Form -->
+            <div class="form-container">
+                <form method="POST">
+                    <input type="text" name="room_name" placeholder="Room Name" required>
+                    <input type="number" name="capacity" placeholder="Capacity" required>
+                    <input type="text" name="equipment" placeholder="Equipment" required>
+                    <select name="status">
+                        <option value="available">Available</option>
+                        <option value="not available">Not Available</option>
+                    </select>
+                    <button type="submit" name="add_room">Add Room</button>
+                </form>
+            </div>
+
+            <!-- Room List -->
+            <div class="room-list">
+                <h2>Existing Rooms</h2>
+                <ul>
+                    <?php foreach ($rooms as $room): ?>
+                        <li>
+                            <?php echo htmlspecialchars($room['room_name']); ?> - 
+                            <?php echo htmlspecialchars($room['status']); ?> 
+                            <a href="?change_status=true&id=<?php echo $room['id']; ?>&status=<?php echo $room['status']; ?>">Change Status</a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
         </div>
-    </div>
+    </main>
+
 </body>
 </html>

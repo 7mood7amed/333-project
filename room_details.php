@@ -48,12 +48,14 @@ $schedules = $statement->fetchAll();
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #e0f7fa;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
             overflow-x: hidden;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            animation: backgroundShift 10s infinite alternate;
         }
 
         header {
@@ -130,38 +132,33 @@ $schedules = $statement->fetchAll();
         }
 
         .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 50px auto;
-            padding: 30px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
             animation: fadeIn 1s ease-in-out;
         }
 
-        header h1 {
-            text-align: center;
-            color: #fff;
-            animation: bounceIn 1.5s ease;
-        }
-
         .room-details {
-            background: #fff;
+            background: #ffffff;
             padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 20px;
         }
 
         .room-details h2 {
-            color: #3498db;
-            font-size: 28px;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #2575fc;
         }
 
         .room-details p {
-            font-size: 16px;
+            font-size: 1rem;
             color: #333;
+            margin-bottom: 15px;
         }
 
         table {
@@ -194,10 +191,10 @@ $schedules = $statement->fetchAll();
 
         footer {
             text-align: center;
-            padding: 20px 0;
+            padding: 20px;
             background-color: #2c3e50;
             color: white;
-            margin-top: 50px;
+            margin-top: auto;
         }
 
         /* Animations */
@@ -232,62 +229,53 @@ $schedules = $statement->fetchAll();
             }
         }
 
-        @keyframes bounceIn {
-            0% {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-            60% {
-                transform: scale(1.1);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1);
-            }
+        @keyframes backgroundShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
         }
     </style>
 </head>
 <body>
-<header>
-    <h1>Room Details</h1>
-</header>
-<main class="container">
-    <div class="room-details">
-        <h2><?php echo htmlspecialchars($room['room_name']); ?></h2>
-        <p><strong>Capacity:</strong> <?php echo htmlspecialchars($room['capacity']); ?> people</p>
-        <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($room['description'])); ?></p>
-        <p><strong>Equipment:</strong> <?php echo htmlspecialchars($room['equipment']); ?></p>
-        <p><strong>Status:</strong> <?php echo htmlspecialchars($room['status']); ?></p>
+    
 
-        <h3>Available Time Slots</h3>
-        <?php if (count($schedules) > 0): ?>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Booking Date</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($schedules as $schedule): ?>
+    <div class="container">
+        <div class="room-details">
+            <h2><?php echo htmlspecialchars($room['room_name']); ?></h2>
+            <p><strong>Capacity:</strong> <?php echo htmlspecialchars($room['capacity']); ?> people</p>
+            <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($room['description'])); ?></p>
+            <p><strong>Equipment:</strong> <?php echo htmlspecialchars($room['equipment']); ?></p>
+            <p><strong>Status:</strong> <?php echo htmlspecialchars($room['status']); ?></p>
+
+            <h3>Available Time Slots</h3>
+            <?php if (count($schedules) > 0): ?>
+                <table>
+                    <thead>
                         <tr>
-                            <td><?php echo htmlspecialchars($schedule['id']); ?></td>
-                            <td><?php echo htmlspecialchars($schedule['booking_date']); ?></td>
-                            <td><?php echo htmlspecialchars($schedule['start_time']); ?></td>
-                            <td><?php echo htmlspecialchars($schedule['end_time']); ?></td>
+                            <th>ID</th>
+                            <th>Booking Date</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        <?php else: ?>
-            <p>No available time slots for this room.</p>
-        <?php endif; ?>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($schedules as $schedule): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($schedule['id']); ?></td>
+                                <td><?php echo htmlspecialchars($schedule['booking_date']); ?></td>
+                                <td><?php echo htmlspecialchars($schedule['start_time']); ?></td>
+                                <td><?php echo htmlspecialchars($schedule['end_time']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p>No available time slots for this room.</p>
+            <?php endif; ?>
+        </div>
     </div>
-</main>
-<footer>
-    <p>&copy; 2024 Room Booking System. All rights reserved.</p>
-</footer>
+
+    <footer>
+        <p>&copy; 2024 Room Booking System | All Rights Reserved</p>
+    </footer>
 </body>
 </html>

@@ -57,6 +57,7 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
         flex-direction: column;
         min-height: 100vh;
         overflow-x: hidden;
+        padding-top: 130px; /* Ensure there's space for the sticky header */
     }
 
     header {
@@ -113,6 +114,24 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
         text-decoration: none;
         border-radius: 5px;
         transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    aside {
+    width: 20%;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    height: 100vh;
+    position: fixed; /* Keep sidebar fixed to the left */
+    top: 70px; /* Adjust for the height of the sticky header */
+    }
+
+/* Main Content Area */
+    main {
+        width: 80%;
+        padding: 30px;
+        margin-left: 20%;
+        margin-top: 130px; /* Ensure main content isn't hidden under the header */
     }
 
     .user-options a.button:hover {

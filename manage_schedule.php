@@ -1,6 +1,7 @@
 <?php
 include 'db.php';
 include 'header.php';
+include 'sidebar.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -69,7 +70,7 @@ $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Schedule</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style-index.css">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -77,12 +78,14 @@ $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
             margin: 0;
             padding: 0;
         }
+
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 20px;
         }
+
         .header {
             background-color: #3498db;
             color: white;
@@ -92,6 +95,7 @@ $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
             border-radius: 8px;
             margin-bottom: 20px;
         }
+
         .form-container {
             background: #fff;
             padding: 30px;
@@ -101,6 +105,7 @@ $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
+
         .form-container input, .form-container select, .form-container button {
             width: 100%;
             padding: 12px;
@@ -108,26 +113,32 @@ $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
             border-radius: 8px;
             border: 1px solid #ddd;
         }
+
         .form-container button {
             background-color: #3498db;
             color: white;
             border: none;
             cursor: pointer;
         }
+
         .form-container button:hover {
             background-color: #2980b9;
         }
+
         .message {
             text-align: center;
             font-size: 16px;
             margin-bottom: 20px;
         }
+
         .error-message {
             color: red;
         }
+
         .success-message {
             color: green;
         }
+
         table {
             width: 80%;
             max-width: 800px;
@@ -137,25 +148,38 @@ $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
             border-radius: 8px;
             overflow: hidden;
         }
+
         table th, table td {
             padding: 15px;
             text-align: center;
             border: 1px solid #ddd;
         }
+
         table th {
             background-color: #3498db;
             color: white;
         }
+
         table td {
             background-color: #fff;
         }
+
         table tr:nth-child(even) td {
             background-color: #f9f9f9;
         }
+
         .table-container {
             width: 100%;
             display: flex;
             justify-content: center;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #2c3e50;
+            color: white;
+            margin-top: 50px;
         }
     </style>
 </head>
@@ -230,6 +254,11 @@ $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </table>
     </div>
 </div>
+
+<footer>
+    <p>&copy; 2024 Room Booking System. All rights reserved.</p>
+</footer>
+
 <script src="js/scripts.js"></script>
 </body>
 </html>

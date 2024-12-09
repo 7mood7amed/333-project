@@ -301,17 +301,6 @@ $user_bookings = $statement->fetchAll();
             }
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         @keyframes zoomIn {
             from {
                 opacity: 0;
@@ -340,8 +329,6 @@ $user_bookings = $statement->fetchAll();
     </style>
 </head>
 <body>
-
-
 
 <div class="container">
     <!-- Display success or error messages -->

@@ -22,7 +22,7 @@ $user_bookings = $statement->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Bookings - Room Booking System</title>
-    <link rel="stylesheet" href="style-index.css">
+    <link rel="stylesheet" href="style-index.css"> <!-- Use the same style -->
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -33,10 +33,13 @@ $user_bookings = $statement->fetchAll();
         }
 
         header {
+            position: sticky;
+            top: 0;
             background-color: #3498db;
             padding: 20px;
             text-align: center;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            animation: fadeInDown 1s ease-in-out;
         }
 
         header h1 {
@@ -51,6 +54,7 @@ $user_bookings = $statement->fetchAll();
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
         }
 
         .booking-table {
@@ -81,10 +85,12 @@ $user_bookings = $statement->fetchAll();
         .cancel-button {
             color: #e74c3c;
             text-decoration: none;
+            transition: transform 0.3s ease;
         }
 
         .cancel-button:hover {
             text-decoration: underline;
+            transform: scale(1.05);
         }
 
         footer {
@@ -93,6 +99,27 @@ $user_bookings = $statement->fetchAll();
             background-color: #2c3e50;
             color: white;
             margin-top: 50px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
