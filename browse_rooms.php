@@ -25,85 +25,14 @@ $rooms = $statement->fetchAll();
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #e0f7fa;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
             overflow-x: hidden;
-        }
-
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background-color: #3498db;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            animation: fadeInDown 1s ease-in-out;
-        }
-
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            color: white;
-        }
-
-        .logo-img {
-            height: 50px;
-            animation: fadeInLeft 1.5s ease;
-        }
-
-        nav {
-            flex-grow: 1;
-            text-align: center;
-        }
-
-        nav a {
-            color: white;
-            padding: 10px 15px;
-            text-decoration: none;
-            display: inline-block;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-        }
-
-        nav a:hover {
-            transform: translateY(-3px);
-            background-color: #2980b9;
-            border-radius: 5px;
-        }
-
-        .user-options {
-            display: flex;
-            align-items: center;
-        }
-
-        .user-options a.button {
-            margin-left: 10px;
-            padding: 10px 15px;
-            background-color: #2980b9;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-        }
-
-        .user-options a.button:hover {
-            background-color: #1a5276;
-            transform: translateY(-3px);
-        }
-
-        .profile-pic {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-left: 10px;
-            transition: transform 0.3s ease;
-        }
-
-        .profile-pic:hover {
-            transform: scale(1.1);
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            animation: backgroundShift 10s infinite alternate;
         }
 
         .container {
@@ -111,103 +40,85 @@ $rooms = $statement->fetchAll();
             max-width: 1200px;
             margin: 50px auto;
             padding: 30px;
-            background-color: #fff;
+            background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             animation: fadeIn 1s ease-in-out;
         }
 
-        header h1 {
+        h1 {
             text-align: center;
-            color: #3498db;
+            color: #2575fc;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
             animation: bounceIn 1.5s ease;
         }
 
         .room-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
         }
 
         .room-card {
-            background-color: #fff;
+            background-color: #ffffff;
             padding: 20px;
-            border: 1px solid #ccc;
             border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             animation: zoomIn 1.2s ease;
         }
 
         .room-card:hover {
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
         }
 
         .room-card h2 {
-            font-size: 24px;
-            color: #3498db;
-            margin-bottom: 15px;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #333;
         }
 
         .room-card p {
-            font-size: 16px;
-            color: #333;
+            color: #666;
+            margin-bottom: 10px;
         }
 
         .room-card a {
             display: inline-block;
-            margin-top: 15px;
-            padding: 8px 15px;
-            background-color: #3498db;
+            padding: 10px 15px;
+            background-color: #2575fc;
             color: white;
-            text-decoration: none;
             border-radius: 5px;
-            transition: background-color 0.3s;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
         }
 
         .room-card a:hover {
-            background-color: #2980b9;
+            background-color: #0056b3;
         }
 
         footer {
             text-align: center;
-            padding: 20px 0;
+            padding: 20px;
             background-color: #2c3e50;
             color: white;
-            margin-top: 50px;
+            margin-top: auto;
         }
 
         /* Animations */
+        @keyframes backgroundShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
             }
             to {
                 opacity: 1;
-            }
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
             }
         }
 
