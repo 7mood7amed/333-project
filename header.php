@@ -10,6 +10,9 @@ $username = $is_logged_in ? $_SESSION['username'] : '';
 $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && !empty($_SESSION['profile_picture']) 
     ? $_SESSION['profile_picture'] 
     : 'default.png'; // Fallback to 'default.png'
+
+// Check if the user is an admin
+$is_admin = $is_logged_in && isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
 ?>
 
 <header>
@@ -27,12 +30,12 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
                 <a href="profile.php">My Profile</a>
             <?php endif; ?>
             <a href="my_bookings.php" class="button">My Bookings</a>
+            <?php if ($is_admin): ?>
+                <a href="admin_dashboard.php" class="button">Admin Dashboard</a> <!-- Admin button -->
+            <?php endif; ?>
         </nav>
         <div class="user-options">
-            <?php if ($is_logged_in): ?>
-                <a href="profile.php">
-                    <img src="uploads/<?php echo htmlspecialchars($_SESSION['profile_picture'] ?? 'default.png'); ?>" alt="Profile Picture" class="profile-pic">
-                </a>
+            <?php if ($is_logged_in): ?> 
                 <a href="logout.php" class="button logout-button">Logout</a>
             <?php else: ?>
                 <a href="login.php" class="button">Login</a>

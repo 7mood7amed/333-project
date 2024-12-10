@@ -1,5 +1,4 @@
 <?php
-// profile.php
 session_start();
 require('db.php');
 include 'header.php';
@@ -16,7 +15,7 @@ $query = $db->prepare("SELECT * FROM users WHERE id = ?");
 $query->execute([$user_id]);
 $user = $query->fetch();
 
-//redirect to login page
+// Redirect to login page if user data not found
 if (!$user) {
     header('Location: login.php');
     exit();
@@ -28,86 +27,36 @@ if (!$user) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>User Profile - Room Booking System</title>
     <style>
-        /* General Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #e0f7fa;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            overflow-x: hidden;
+            margin: 0;
         }
 
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background-color: #3498db;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            animation: fadeInDown 1s ease-in-out;
-        }
-
-        .header-container {
+        .container {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            padding: 15px 20px;
-            color: white;
-        }
-
-        .logo-img {
-            height: 50px;
-            animation: fadeInLeft 1.5s ease;
-        }
-
-        nav {
             flex-grow: 1;
+            padding: 20px;
+        }
+
+        .profile-card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 500px;
             text-align: center;
+            animation: fadeIn 1s ease-in-out;
         }
 
-        nav a {
-            color: white;
-            padding: 10px 15px;
-            text-decoration: none;
-            display: inline-block;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-        }
-
-        nav a:hover {
-            transform: translateY(-3px);
-            background-color: #2980b9;
-            border-radius: 5px;
-        }
-
-        .user-options {
-            display: flex;
-            align-items: center;
-        }
-
-        .user-options a.button {
-            margin-left: 10px;
-            padding: 10px 15px;
-            background-color: #2980b9;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-        }
-
-        .user-options a.button:hover {
-            background-color: #1a5276;
-            transform: translateY(-3px);
-        }
-
-        .profile-pic {
+        .profile-card img {
             width: 150px;
             height: 150px;
             border-radius: 50%;
@@ -116,111 +65,73 @@ if (!$user) {
             transition: transform 0.3s ease;
         }
 
-        .profile-pic:hover {
-            transform: scale(1.05);
+        .profile-card img:hover {
+            transform: scale(1.1);
         }
 
-        main {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 30px;
-            flex-grow: 1;
+        .profile-card h1 {
+            font-size: 2rem;
+            color: #2575fc;
+            margin-bottom: 15px;
         }
 
-        .profile-info {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            width: 100%;
-            max-width: 600px;
-            text-align: center;
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        h1 {
-            font-size: 28px;
-            color: #3498db;
-            margin-bottom: 20px;
-        }
-
-        .profile-info p {
-            font-size: 18px;
-            margin: 10px 0;
+        .profile-card p {
+            font-size: 1rem;
             color: #555;
+            margin: 10px 0;
         }
 
-        .profile-info strong {
-            color: #3498db;
+        .profile-card strong {
+            color: #2575fc;
         }
 
-        .button {
-            background-color: #3498db;
-            color: white;
+        .profile-card .button {
+            display: inline-block;
+            background: #2575fc;
+            color: #fff;
+            text-decoration: none;
             padding: 10px 20px;
             border-radius: 8px;
-            text-decoration: none;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
+            margin-top: 20px;
+            transition: background 0.3s ease;
         }
 
-        .button:hover {
-            background-color: #2980b9;
+        .profile-card .button:hover {
+            background: #0056b3;
         }
 
         footer {
             text-align: center;
-            padding: 20px;
             background-color: #2c3e50;
             color: white;
+            padding: 15px 20px;
+            font-size: 0.9rem;
         }
 
-        /* Animations */
         @keyframes fadeIn {
             from {
                 opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
+                transform: translateY(10px);
             }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-
-        @keyframes fadeInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
     </style>
 </head>
 <body>
 
-<main>
-    <div class="profile-info">
-        <img src="uploads/<?php echo $user['profile_picture'] ?: 'default.png'; ?>" class="profile-pic" alt="Profile Picture">
+<div class="container">
+    <div class="profile-card">
+        <img src="uploads/<?php echo htmlspecialchars($user['profile_picture'] ?: 'default.png'); ?>" alt="Profile Picture">
         <h1>User Profile</h1>
         <p><strong>Name:</strong> <?php echo htmlspecialchars($user['name']); ?></p>
         <p><strong>Username:</strong> <?php echo htmlspecialchars($user['username']); ?></p>
         <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
         <a href="edit_profile.php" class="button">Edit Profile</a>
     </div>
-</main>
+</div>
 
 <footer>
     <p>&copy; 2024 Room Booking System. All rights reserved.</p>

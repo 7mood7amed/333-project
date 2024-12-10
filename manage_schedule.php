@@ -1,7 +1,6 @@
 <?php
 include 'db.php';
 include 'header.php';
-include 'sidebar.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -70,9 +69,9 @@ $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Schedule</title>
-    <link rel="stylesheet" href="style-index.css">
     <style>
         body {
+            display: flex;
             font-family: 'Poppins', sans-serif;
             background-color: #f8f9fd;
             margin: 0;
@@ -81,9 +80,9 @@ $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         .container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
             padding: 20px;
+            width: 100%;
+            gap: 20px; /* Space between form and table */
         }
 
         .header {
@@ -96,11 +95,43 @@ $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
             margin-bottom: 20px;
         }
 
+        aside {
+            width: 20%;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        aside .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2575fc;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        aside .menu a {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            font-size: 1rem;
+            color: #555;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        aside .menu a.active, aside .menu a:hover {
+            background-color: #f2f2f2;
+            color: #2575fc;
+        }
+
         .form-container {
             background: #fff;
             padding: 30px;
-            width: 80%;
-            max-width: 600px;
+            width: 48%; /* Adjust width */
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
@@ -140,7 +171,7 @@ $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         table {
-            width: 80%;
+            width: 48%; /* Adjust width */
             max-width: 800px;
             margin-top: 30px;
             border-collapse: collapse;
@@ -169,26 +200,28 @@ $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         .table-container {
-            width: 100%;
             display: flex;
             justify-content: center;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px 0;
-            background-color: #2c3e50;
-            color: white;
-            margin-top: 50px;
+            width: 100%;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1>Manage Room Schedule</h1>
+<aside>
+    <div class="logo">Admin Panel</div>
+    <div class="menu">
+        <a href="#" class="active">Dashboard</a>
+        <a href="manage_rooms.php">Manage Rooms</a>
+        <a href="manage_schedule.php">Room Schedule</a>
+        <a href="manage_users.php">Manage Users</a>
+        <a href="logout.php">Logout</a>
     </div>
+</aside>
+
+<div class="container">
+
+
 
     <!-- Success/Error Messages -->
     <div class="message">
@@ -253,12 +286,9 @@ $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </tbody>
         </table>
     </div>
+
 </div>
 
-<footer>
-    <p>&copy; 2024 Room Booking System. All rights reserved.</p>
-</footer>
-
-<script src="js/scripts.js"></script>
+<script src="header-script.js"></script>
 </body>
 </html>

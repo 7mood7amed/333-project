@@ -22,39 +22,31 @@ $user_bookings = $statement->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Bookings - Room Booking System</title>
-    <link rel="stylesheet" href="style-index.css"> <!-- Use the same style -->
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #e0f7fa;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
-
-        header {
-            position: sticky;
-            top: 0;
-            background-color: #3498db;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            animation: fadeInDown 1s ease-in-out;
-        }
-
-        header h1 {
-            color: #fff;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
             margin: 0;
         }
 
         .container {
             max-width: 1200px;
-            margin: 50px auto;
-            padding: 30px;
-            background-color: #fff;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             animation: fadeIn 1s ease-in-out;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2575fc;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
         }
 
         .booking-table {
@@ -70,12 +62,13 @@ $user_bookings = $statement->fetchAll();
         }
 
         .booking-table th {
-            background-color: #3498db;
+            background-color: #2575fc;
             color: white;
+            font-size: 1.1rem;
         }
 
         .booking-table td {
-            background-color: #fff;
+            color: #333;
         }
 
         .booking-table tr:nth-child(even) td {
@@ -85,12 +78,20 @@ $user_bookings = $statement->fetchAll();
         .cancel-button {
             color: #e74c3c;
             text-decoration: none;
-            transition: transform 0.3s ease;
+            font-weight: bold;
+            transition: transform 0.3s ease, color 0.3s ease;
         }
 
         .cancel-button:hover {
-            text-decoration: underline;
             transform: scale(1.05);
+            color: #c0392b;
+            text-decoration: underline;
+        }
+
+        p {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #555;
         }
 
         footer {
@@ -98,23 +99,13 @@ $user_bookings = $statement->fetchAll();
             padding: 20px 0;
             background-color: #2c3e50;
             color: white;
-            margin-top: 50px;
+            margin-top: auto;
         }
 
-        /* Animations */
         @keyframes fadeIn {
             from {
                 opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
+                transform: translateY(10px);
             }
             to {
                 opacity: 1;
@@ -125,12 +116,9 @@ $user_bookings = $statement->fetchAll();
 </head>
 <body>
 
-<header>
-    <h1>Your Bookings</h1>
-</header>
-
 <div class="container">
-    <!-- Display the user's bookings -->
+    <h1>Your Bookings</h1>
+
     <?php if (count($user_bookings) > 0): ?>
         <table class="booking-table">
             <thead>
@@ -155,7 +143,7 @@ $user_bookings = $statement->fetchAll();
             </tbody>
         </table>
     <?php else: ?>
-        <p>You have no bookings.</p>
+        <p>You have no bookings at the moment.</p>
     <?php endif; ?>
 </div>
 
@@ -163,6 +151,5 @@ $user_bookings = $statement->fetchAll();
     <p>&copy; 2024 Room Booking System. All rights reserved.</p>
 </footer>
 
-<script src="js/scripts.js"></script>
 </body>
 </html>

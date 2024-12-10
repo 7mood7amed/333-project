@@ -2,7 +2,6 @@
 session_start();
 include 'db.php';
 include 'header.php';
-include 'sidebar.php';
 
 // Ensure the user is logged in and is an admin
 if (!isset($_SESSION['user_id']) || $_SESSION['is_admin'] !== true) {
@@ -52,7 +51,6 @@ if (isset($_GET['delete_user'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Users - Admin Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* General Styling */
         body {
@@ -116,6 +114,39 @@ if (isset($_GET['delete_user'])) {
             color: #c0392b;
         }
 
+        aside {
+            width: 20%;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        aside .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2575fc;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        aside .menu a {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            font-size: 1rem;
+            color: #555;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        aside .menu a.active, aside .menu a:hover {
+            background-color: #f2f2f2;
+            color: #2575fc;
+        }
+
         /* Status Update Form */
         .status-select {
             padding: 8px;
@@ -170,6 +201,17 @@ if (isset($_GET['delete_user'])) {
     </style>
 </head>
 <body>
+
+<aside>
+        <div class="logo">Admin Panel</div>
+        <div class="menu">
+            <a href="#" class="active">Dashboard</a>
+            <a href="manage_rooms.php">Manage Rooms</a>
+            <a href="manage_schedule.php">Room Schedule</a>
+            <a href="manage_users.php">Manage Users</a>
+            <a href="logout.php">Logout</a>
+        </div>
+    </aside>
 
 <main>
     <h1>Manage Users</h1>

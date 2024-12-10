@@ -1,11 +1,39 @@
 <?php
 session_start();
 include 'db.php';
-include 'header.php'; // Includes the header logic
+include 'header.php';
 
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
+    exit();
+}
+
+// Handle booking cancellation
+if (isset($_GET['cancel_booking'])) {
+    $booking_id = (int) $_GET['cancel_booking'];
+
+    // Check if the booking belongs to the current user
+    $query = "SELECT * FROM bookings WHERE id = ? AND user_id = ?";
+    $statement = $db->prepare($query);
+    $statement->execute([$booking_id, $_SESSION['user_id']]);
+    $booking = $statement->fetch();
+
+    if ($booking) {
+        // Cancel the booking
+        $query = "DELETE FROM bookings WHERE id = ?";
+        $statement = $db->prepare($query);
+        if ($statement->execute([$booking_id])) {
+            $success_message = "Your booking has been successfully cancelled.";
+        } else {
+            $error_message = "Failed to cancel the booking. Please try again.";
+        }
+    } else {
+        $error_message = "Booking not found or you do not have permission to cancel this booking.";
+    }
+
+    // Redirect back to the bookings page after cancellation
+    header("Location: my_bookings.php");
     exit();
 }
 
@@ -22,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['book_room'])) {
     $end_time = $_POST['end_time'];
     $user_id = $_SESSION['user_id'];
 
-    // Check if the room is already booked during the selected time
+    // Check if the room is already booked
     $query = "SELECT * FROM bookings WHERE room_id = ? AND ((start_time <= ? AND end_time > ?) OR (start_time < ? AND end_time >= ?))";
     $statement = $db->prepare($query);
     $statement->execute([$room_id, $end_time, $start_time, $start_time, $end_time]);
@@ -41,23 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['book_room'])) {
     }
 }
 
-// Handle booking cancellation
-if (isset($_GET['cancel_booking'])) {
-    $booking_id = (int) $_GET['cancel_booking'];
-
-    // Cancel the booking
-    $query = "DELETE FROM bookings WHERE id = ? AND user_id = ?";
-    $statement = $db->prepare($query);
-    $statement->execute([$booking_id, $_SESSION['user_id']]);
-
-    if ($statement->rowCount() > 0) {
-        $cancel_message = "Booking canceled successfully.";
-    } else {
-        $cancel_error = "Failed to cancel the booking.";
-    }
-}
-
-// Fetch the user's current bookings
+// Fetch user's current bookings
 $query = "SELECT b.*, r.room_name FROM bookings b JOIN rooms r ON b.room_id = r.id WHERE b.user_id = ?";
 $statement = $db->prepare($query);
 $statement->execute([$_SESSION['user_id']]);
@@ -70,182 +82,151 @@ $user_bookings = $statement->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book a Room - Room Booking System</title>
-    <link rel="stylesheet" href="style-index.css">
     <style>
-        /* General Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
             font-family: Arial, sans-serif;
             background-color: #e0f7fa;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
         }
 
         .container {
-            display: flex;
-            flex-direction: column;
-            padding: 40px 20px;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            color: #2575fc;
-        }
-
-        .message {
-            margin: 20px 0;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-
-        .success {
-            background-color: #28a745;
-            color: #fff;
-        }
-
-        .error {
-            background-color: #dc3545;
-            color: #fff;
-        }
-
-        .form-container {
-            background: #ffffff;
+            max-width: 1200px;
+            margin: 20px auto;
             padding: 20px;
-            border-radius: 8px;
+            background: white;
+            border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
         }
 
-        .form-container select,
-        .form-container input,
-        .form-container button {
+        h1, h2 {
+            text-align: center;
+            color: #2575fc;
+            margin-bottom: 20px;
+        }
+
+        .form-container,
+        .booking-container {
+            margin: 20px 0;
+        }
+
+        .form-container form,
+        .booking-container table {
+            width: 100%;
+        }
+
+        .form-container form input,
+        .form-container form select,
+        .form-container form button {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
-            border-radius: 8px;
+            border-radius: 5px;
             border: 1px solid #ccc;
         }
 
-        .form-container button {
-            background-color: #3498db;
-            color: #fff;
+        .form-container form button {
+            background-color: #2575fc;
+            color: white;
             border: none;
             cursor: pointer;
         }
 
-        .form-container button:hover {
-            background-color: #2980b9;
+        .form-container form button:hover {
+            background-color: #0056b3;
         }
 
-        .booking-table {
-            width: 100%;
+        table {
             border-collapse: collapse;
+            width: 100%;
         }
 
-        .booking-table th,
-        .booking-table td {
+        table th, table td {
             padding: 10px;
-            text-align: left;
             border-bottom: 1px solid #ddd;
         }
 
-        .booking-table th {
+        table th {
             background-color: #f2f2f2;
         }
 
-        .cancel-button {
-            color: #e74c3c;
-            text-decoration: none;
-        }
-
-        .cancel-button:hover {
-            text-decoration: underline;
-        }
-
-        footer {
+        .message {
             text-align: center;
-            padding: 20px;
-            background-color: #2c3e50;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .message.success {
+            background-color: #28a745;
             color: white;
-            margin-top: auto;
+        }
+
+        .message.error {
+            background-color: #dc3545;
+            color: white;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Display success or error messages -->
-        <?php if (isset($success_message)): ?>
-            <div class="message success"><?php echo $success_message; ?></div>
-        <?php elseif (isset($error_message)): ?>
-            <div class="message error"><?php echo $error_message; ?></div>
+        <h1>Book a Room</h1>
+
+        <?php if (isset($success_message)) : ?>
+            <div class="message success"><?= htmlspecialchars($success_message) ?></div>
+        <?php elseif (isset($error_message)) : ?>
+            <div class="message error"><?= htmlspecialchars($error_message) ?></div>
         <?php endif; ?>
 
-        <?php if (isset($cancel_message)): ?>
-            <div class="message success"><?php echo $cancel_message; ?></div>
-        <?php elseif (isset($cancel_error)): ?>
-            <div class="message error"><?php echo $cancel_error; ?></div>
-        <?php endif; ?>
-
-        <!-- Booking Form -->
         <div class="form-container">
-            <h2>Select a Room to Book</h2>
-            <form action="" method="POST">
+            <h2>Booking Form</h2>
+            <form method="POST">
                 <label for="room_id">Room</label>
-                <select name="room_id" id="room_id" required>
-                    <?php foreach ($rooms as $room): ?>
-                        <option value="<?php echo $room['id']; ?>"><?php echo htmlspecialchars($room['room_name']); ?></option>
+                <select id="room_id" name="room_id" required>
+                    <?php foreach ($rooms as $room) : ?>
+                        <option value="<?= $room['id'] ?>"><?= htmlspecialchars($room['room_name']) ?></option>
                     <?php endforeach; ?>
                 </select>
-
                 <label for="start_time">Start Time</label>
-                <input type="datetime-local" name="start_time" id="start_time" required>
-
+                <input type="datetime-local" id="start_time" name="start_time" required>
                 <label for="end_time">End Time</label>
-                <input type="datetime-local" name="end_time" id="end_time" required>
-
+                <input type="datetime-local" id="end_time" name="end_time" required>
                 <button type="submit" name="book_room">Book Room</button>
             </form>
         </div>
 
-        <h2>Your Current Bookings</h2>
-        <?php if (count($user_bookings) > 0): ?>
-            <table class="booking-table">
-                <thead>
-                    <tr>
-                        <th>Room</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($user_bookings as $booking): ?>
+        <div class="booking-container">
+            <h2>Your Bookings</h2>
+            <?php if ($user_bookings) : ?>
+                <table>
+                    <thead>
                         <tr>
-                            <td><?php echo htmlspecialchars($booking['room_name']); ?></td>
-                            <td><?php echo date("Y-m-d H:i", strtotime($booking['start_time'])); ?></td>
-                            <td><?php echo date("Y-m-d H:i", strtotime($booking['end_time'])); ?></td>
-                            <td>
-                                <a href="book_room.php?cancel_booking=<?php echo $booking['id']; ?>" class="cancel-button">Cancel</a>
-                            </td>
+                            <th>Room</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Action</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        <?php else: ?>
-            <p>You have no current bookings.</p>
-        <?php endif; ?>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($user_bookings as $booking) : ?>
+                            <tr>
+                                <td><?= htmlspecialchars($booking['room_name']) ?></td>
+                                <td><?= htmlspecialchars($booking['start_time']) ?></td>
+                                <td><?= htmlspecialchars($booking['end_time']) ?></td>
+                                <td>
+                                    <a href="book_room.php?cancel_booking=<?= $booking['id'] ?>" class="cancel-button">Cancel</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else : ?>
+                <p>No bookings available.</p>
+            <?php endif; ?>
+        </div>
     </div>
-
-    <footer>
-        <p>&copy; 2024 Room Booking System. All rights reserved.</p>
-    </footer>
 </body>
 </html>
