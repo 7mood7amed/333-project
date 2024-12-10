@@ -16,6 +16,7 @@ $query = $db->prepare("SELECT * FROM users WHERE id = ?");
 $query->execute([$user_id]);
 $user = $query->fetch();
 
+//redirect to login page
 if (!$user) {
     header('Location: login.php');
     exit();
