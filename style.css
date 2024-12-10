@@ -119,6 +119,26 @@ button:hover {
     text-decoration: none;
 }
 
+/* Profile Picture and Button Styles */
+.profile-pic {
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.button {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #2980b9;
+}
 /* Responsive Design */
 
 /* For smaller screens (tablets and mobile devices) */
