@@ -93,6 +93,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['is_admin'] !== true) {
             font-weight: bold;
             color: #444;
         }
+        @media (max-width: 600px){ 
+            .button { 
+                width: 100%; 
+                box-sizing: border-box;
+            }
+        }
     </style>
 </head>
 <body>
