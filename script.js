@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     // Form validation
     const forms = document.querySelectorAll('form');
