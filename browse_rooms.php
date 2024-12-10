@@ -1,7 +1,7 @@
 <?php
 session_start();
 include 'db.php';
-include 'header.php';
+include 'header.php'; // Use the header from header.php
 
 // Fetch all available rooms from the database
 $query = "SELECT * FROM rooms WHERE status = 'available'";
@@ -30,7 +30,8 @@ $rooms = $statement->fetchAll();
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            overflow-x: hidden;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            padding-top: 80px; /* Space for the fixed header */
             background: linear-gradient(135deg, #74ebd5, #acb6e5);
             animation: backgroundShift 10s infinite alternate;
         }
@@ -38,8 +39,8 @@ $rooms = $statement->fetchAll();
         .container {
             width: 100%;
             max-width: 1200px;
-            margin: 50px auto;
-            padding: 30px;
+            margin: 20px auto;
+            padding: 20px;
             background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -50,19 +51,20 @@ $rooms = $statement->fetchAll();
             text-align: center;
             color: #2575fc;
             font-size: 2.5rem;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             animation: bounceIn 1.5s ease;
         }
 
         .room-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
             gap: 20px;
+            overflow-x: hidden; /* Prevent extra space */
         }
 
         .room-card {
             background-color: #ffffff;
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -146,10 +148,41 @@ $rooms = $statement->fetchAll();
                 transform: scale(1);
             }
         }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .room-card {
+                padding: 10px;
+            }
+
+            .room-card h2 {
+                font-size: 1.2rem;
+            }
+
+            .room-card a {
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            body {
+                padding-top: 100px; /* Adjust space for mobile header */
+            }
+
+            .room-list {
+                grid-template-columns: 1fr; /* Single column layout */
+            }
+        }
     </style>
 </head>
 <body>
-
 
 <div class="container">
     <h1>Browse Available Rooms</h1>
