@@ -28,10 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['remove_picture'])) {
         // Handle profile picture removal
         $upload_dir = 'uploads/';
-        if ($profile_picture && $profile_picture !== 'default.png') {
+        if ($profile_picture && $profile_picture !== 'blank-profile-picture-973460_1280.webp') {
             unlink($upload_dir . $profile_picture); // Remove current profile picture
         }
-        $profile_picture = 'default.png'; // Reset to default
+        $profile_picture = 'blank-profile-picture-973460_1280.webp'; // Reset to default
     } else {
         $name = trim(htmlspecialchars($_POST['name']));
 
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $upload_path = $upload_dir . $new_file_name;
 
                 if (move_uploaded_file($file_tmp, $upload_path)) {
-                    if ($profile_picture && $profile_picture !== 'default.png') {
+                    if ($profile_picture && $profile_picture !== 'blank-profile-picture-973460_1280.webp') {
                         unlink($upload_dir . $profile_picture);
                     }
                     $profile_picture = $new_file_name;
@@ -114,14 +114,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         label {
             text-align: left;
             display: block;
-            margin-top: 10px;
+            margin-top: 20px;
             font-weight: bold;
         }
 
         input[type="text"],
         input[type="email"],
         input[type="file"] {
-            width: 100%;
+            width: 95%;
             padding: 10px;
             margin-top: 5px;
             border-radius: 5px;
@@ -207,7 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="email" id="email" value="<?= htmlspecialchars($user['email']) ?>" class="readonly-field" readonly>
 
         <label for="profile_picture">Profile Picture</label>
-        <?php if ($profile_picture !== 'default.png'): ?>
+        <?php if ($profile_picture !== 'blank-profile-picture-973460_1280.webp'): ?>
             <img src="uploads/<?= htmlspecialchars($profile_picture) ?>" alt="Profile Picture">
         <?php endif; ?>
         <input type="file" id="profile_picture" name="profile_picture">
@@ -215,7 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">Save Changes</button>
     </form>
 
-    <?php if ($profile_picture !== 'default.png'): ?>
+    <?php if ($profile_picture !== 'blank-profile-picture-973460_1280.webp'): ?>
         <form method="POST">
             <button type="submit" name="remove_picture" class="remove-button">Remove Profile Picture</button>
         </form>

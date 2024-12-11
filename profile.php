@@ -124,7 +124,7 @@ if (!$user) {
 
 <div class="container">
     <div class="profile-card">
-        <img src="uploads/<?php echo htmlspecialchars($user['profile_picture'] ?: 'default.png'); ?>" alt="Profile Picture">
+        <img src="uploads/<?php echo htmlspecialchars($user['profile_picture'] ?: 'C:\Users\mm752\333-project-4\img\blank-profile-picture-973460_1280.webp'); ?>" alt="Profile Picture">
         <h1>User Profile</h1>
         <p><strong>Name:</strong> <?php echo htmlspecialchars($user['name']); ?></p>
         <p><strong>Username:</strong> <?php echo htmlspecialchars($user['username']); ?></p>
