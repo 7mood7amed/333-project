@@ -15,12 +15,11 @@ $statement = $db->prepare($query);
 $statement->execute();
 $users = $statement->fetchAll();
 
-// Handle user status update (e.g., promoting to admin or deactivating user)
+// Handle user status update
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
-    $user_id = (int) $_POST['user_id'];
+    $user_id = (int)$_POST['user_id'];
     $new_status = $_POST['status'];
 
-    // Update user status (e.g., promote to admin or deactivate account)
     $updateQuery = "UPDATE users SET status = :status WHERE id = :user_id";
     $updateStmt = $db->prepare($updateQuery);
     if ($updateStmt->execute([':status' => $new_status, ':user_id' => $user_id])) {
@@ -32,9 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
 
 // Handle user deletion
 if (isset($_GET['delete_user'])) {
-    $delete_user_id = (int) $_GET['delete_user'];
+    $delete_user_id = (int)$_GET['delete_user'];
 
-    // Delete user from the database
     $deleteQuery = "DELETE FROM users WHERE id = ?";
     $deleteStmt = $db->prepare($deleteQuery);
     if ($deleteStmt->execute([$delete_user_id])) {
@@ -52,66 +50,12 @@ if (isset($_GET['delete_user'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Users - Admin Dashboard</title>
     <style>
-        /* General Styling */
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fd;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
             margin: 0;
-            padding: 0;
-            color: #333;
-        }
-
-        /* Main Content */
-        main {
-            padding: 30px;
-        }
-
-        h1 {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #3498db;
-        }
-
-        /* User Table Styling */
-        .user-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .user-table th, .user-table td {
-            padding: 12px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-
-        .user-table th {
-            background-color: #3498db;
-            color: white;
-        }
-
-        .user-table td {
-            background-color: #fff;
-        }
-
-        .user-table tr:nth-child(even) td {
-            background-color: #f9f9f9;
-        }
-
-        /* Action Buttons */
-        .action-buttons a {
-            text-decoration: none;
-            color: #e74c3c;
-            margin-right: 10px;
-            font-size: 16px;
-        }
-
-        .action-buttons a:hover {
-            color: #c0392b;
+            display: flex;
+            min-height: 100vh;
         }
 
         aside {
@@ -119,9 +63,9 @@ if (isset($_GET['delete_user'])) {
             background: #fff;
             padding: 20px;
             box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            height: 100vh; /* Full-height sidebar */
+            position: fixed; /* Fixed to the left */
+            left: 0;
         }
 
         aside .logo {
@@ -147,86 +91,121 @@ if (isset($_GET['delete_user'])) {
             color: #2575fc;
         }
 
-        /* Status Update Form */
+        main {
+            width: 80%;
+            margin-left: 20%;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #2575fc;
+            text-align: center;
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .user-table th, .user-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .user-table th {
+            background-color: #2575fc;
+            color: white;
+        }
+
+        .user-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
         .status-select {
             padding: 8px;
-            font-size: 16px;
-            width: 100%;
-            max-width: 120px;
+            font-size: 1rem;
             border: 1px solid #ddd;
             border-radius: 8px;
-            margin-right: 10px;
+            width: 100%;
+            max-width: 150px;
         }
 
         button[type="submit"] {
-            background-color: #3498db;
+            background-color: #2575fc;
             color: white;
             padding: 8px 16px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
         button[type="submit"]:hover {
-            background-color: #2980b9;
+            background-color: #0056b3;
         }
 
-        /* Success and Error Messages */
+        .action-buttons a {
+            text-decoration: none;
+            color: #e74c3c;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .action-buttons a:hover {
+            color: #c0392b;
+        }
+
         .message {
-            padding: 10px;
+            text-align: center;
             margin-bottom: 20px;
-            border-radius: 5px;
+            padding: 10px;
+            border-radius: 8px;
         }
 
         .success {
-            background-color: #d4edda;
-            color: #155724;
+            background-color: #28a745;
+            color: white;
         }
 
         .error {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .user-table, .status-select {
-                font-size: 14px;
-            }
-
-            button[type="submit"] {
-                font-size: 14px;
-            }
+            background-color: #dc3545;
+            color: white;
         }
     </style>
 </head>
 <body>
 
 <aside>
-        <div class="logo">Admin Panel</div>
-        <div class="menu">
-            <a href="#" class="active">Dashboard</a>
-            <a href="manage_rooms.php">Manage Rooms</a>
-            <a href="manage_schedule.php">Room Schedule</a>
-            <a href="manage_users.php">Manage Users</a>
-            <a href="logout.php">Logout</a>
-        </div>
-    </aside>
+    <div class="logo">Admin Panel</div>
+    <div class="menu">
+        <a href="admin_dashboard.php">Dashboard</a>
+        <a href="manage_rooms.php">Manage Rooms</a>
+        <a href="manage_schedule.php">Room Schedule</a>
+        <a href="manage_users.php" class="active">Manage Users</a>
+        <a href="logout.php">Logout</a>
+    </div>
+</aside>
 
 <main>
     <h1>Manage Users</h1>
 
     <!-- Success and Error Messages -->
     <?php if (isset($status_message)): ?>
-        <div class="message success"><?php echo $status_message; ?></div>
+        <div class="message success"><?= htmlspecialchars($status_message) ?></div>
     <?php elseif (isset($status_error)): ?>
-        <div class="message error"><?php echo $status_error; ?></div>
+        <div class="message error"><?= htmlspecialchars($status_error) ?></div>
     <?php endif; ?>
 
     <?php if (isset($delete_message)): ?>
-        <div class="message success"><?php echo $delete_message; ?></div>
+        <div class="message success"><?= htmlspecialchars($delete_message) ?></div>
     <?php elseif (isset($delete_error)): ?>
-        <div class="message error"><?php echo $delete_error; ?></div>
+        <div class="message error"><?= htmlspecialchars($delete_error) ?></div>
     <?php endif; ?>
 
     <!-- User Table -->
@@ -242,29 +221,27 @@ if (isset($_GET['delete_user'])) {
         <tbody>
             <?php foreach ($users as $user): ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($user['username']); ?></td>
-                    <td><?php echo htmlspecialchars($user['email']); ?></td>
+                    <td><?= htmlspecialchars($user['username']) ?></td>
+                    <td><?= htmlspecialchars($user['email']) ?></td>
                     <td>
-                        <form action="manage_users.php" method="POST">
+                        <form method="POST">
                             <select name="status" class="status-select">
-                                <option value="active" <?php echo ($user['status'] === 'active' ? 'selected' : ''); ?>>Active</option>
-                                <option value="inactive" <?php echo ($user['status'] === 'inactive' ? 'selected' : ''); ?>>Inactive</option>
-                                <option value="admin" <?php echo ($user['status'] === 'admin' ? 'selected' : ''); ?>>Admin</option>
+                                <option value="active" <?= $user['status'] === 'active' ? 'selected' : '' ?>>Active</option>
+                                <option value="inactive" <?= $user['status'] === 'inactive' ? 'selected' : '' ?>>Inactive</option>
+                                <option value="admin" <?= $user['status'] === 'admin' ? 'selected' : '' ?>>Admin</option>
                             </select>
-                            <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                            <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
                             <button type="submit" name="update_status">Update Status</button>
                         </form>
                     </td>
                     <td class="action-buttons">
-                        <a href="manage_users.php?delete_user=<?php echo $user['id']; ?>" onclick="return confirm('Are you sure you want to delete this user?')">
-                            <i class="fas fa-trash-alt"></i> Delete
-                        </a>
+                        <a href="manage_users.php?delete_user=<?= $user['id'] ?>" onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
 </main>
-<script src="js/scripts.js"></script>
+
 </body>
 </html>

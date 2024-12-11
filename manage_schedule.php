@@ -35,7 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Check if the room is already booked for this time slot
     if (empty($errors)) {
-        $check_query = "SELECT * FROM schedules WHERE room_id = ? AND booking_date = ? AND ((start_time < ? AND end_time > ?) OR (start_time < ? AND end_time > ?))";
+        $check_query = "SELECT * FROM schedules WHERE room_id = ? AND booking_date = ? 
+                        AND ((start_time < ? AND end_time > ?) OR (start_time < ? AND end_time > ?))";
         $check_stmt = $db->prepare($check_query);
         $check_stmt->execute([$room_id, $booking_date, $end_time, $start_time, $start_time, $end_time]);
         $existing_schedule = $check_stmt->fetch();
@@ -68,31 +69,14 @@ $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Schedule</title>
+    <title>Manage Schedule - Room Booking System</title>
     <style>
         body {
-            display: flex;
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fd;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
             margin: 0;
-            padding: 0;
-        }
-
-        .container {
             display: flex;
-            padding: 20px;
-            width: 100%;
-            gap: 20px; /* Space between form and table */
-        }
-
-        .header {
-            background-color: #3498db;
-            color: white;
-            padding: 20px;
-            width: 100%;
-            text-align: center;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            min-height: 100vh;
         }
 
         aside {
@@ -100,9 +84,9 @@ $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
             background: #fff;
             padding: 20px;
             box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            height: 100vh; /* Full-height sidebar */
+            position: fixed; /* Fixed to the left */
+            left: 0;
         }
 
         aside .logo {
@@ -128,81 +112,84 @@ $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
             color: #2575fc;
         }
 
-        .form-container {
+        main {
+            width: 80%; /* Take the remaining space */
+            margin-left: 20%; /* Offset by sidebar width */
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px; /* Space between elements */
+        }
+
+        .form-container, .table-container {
+            flex: 1;
+            min-width: 300px;
             background: #fff;
-            padding: 30px;
-            width: 48%; /* Adjust width */
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #2575fc;
         }
 
         .form-container input, .form-container select, .form-container button {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             margin: 10px 0;
             border-radius: 8px;
-            border: 1px solid #ddd;
+            border: 1px solid #ccc;
         }
 
         .form-container button {
-            background-color: #3498db;
-            color: white;
+            background-color: #2575fc;
+            color: #fff;
             border: none;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
         .form-container button:hover {
-            background-color: #2980b9;
-        }
-
-        .message {
-            text-align: center;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-
-        .error-message {
-            color: red;
-        }
-
-        .success-message {
-            color: green;
+            background-color: #0056b3;
         }
 
         table {
-            width: 48%; /* Adjust width */
-            max-width: 800px;
-            margin-top: 30px;
+            width: 100%;
             border-collapse: collapse;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
+            text-align: center;
         }
 
         table th, table td {
-            padding: 15px;
-            text-align: center;
+            padding: 10px;
             border: 1px solid #ddd;
         }
 
         table th {
-            background-color: #3498db;
+            background-color: #2575fc;
             color: white;
         }
 
-        table td {
-            background-color: #fff;
-        }
-
-        table tr:nth-child(even) td {
+        table tr:nth-child(even) {
             background-color: #f9f9f9;
         }
 
-        .table-container {
-            display: flex;
-            justify-content: center;
-            width: 100%;
+        .message {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .error-message {
+            color: #dc3545;
+        }
+
+        .success-message {
+            color: #28a745;
         }
     </style>
 </head>
@@ -211,17 +198,16 @@ $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <aside>
     <div class="logo">Admin Panel</div>
     <div class="menu">
-        <a href="#" class="active">Dashboard</a>
+        <a href="admin_dashboard.php">Dashboard</a>
         <a href="manage_rooms.php">Manage Rooms</a>
-        <a href="manage_schedule.php">Room Schedule</a>
+        <a href="manage_schedule.php" class="active">Room Schedule</a>
         <a href="manage_users.php">Manage Users</a>
         <a href="logout.php">Logout</a>
     </div>
 </aside>
 
-<div class="container">
-
-
+<main>
+    <h1>Manage Room Schedules</h1>
 
     <!-- Success/Error Messages -->
     <div class="message">
@@ -232,63 +218,64 @@ $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
     </div>
 
-    <!-- Add Schedule Form -->
-    <div class="form-container">
-        <h2>Add Schedule</h2>
-        <form method="POST">
-            <label for="room_id">Room:</label>
-            <select name="room_id" required>
-                <?php
-                // Fetch rooms for the dropdown
-                $room_stmt = $db->query("SELECT id, room_name FROM rooms");
-                $rooms = $room_stmt->fetchAll(PDO::FETCH_ASSOC);
-                foreach ($rooms as $room) {
-                    echo "<option value=\"{$room['id']}\">{$room['room_name']}</option>";
-                }
-                ?>
-            </select>
+    <div class="container">
+        <!-- Add Schedule Form -->
+        <div class="form-container">
+            <h2>Add Schedule</h2>
+            <form method="POST">
+                <label for="room_id">Room:</label>
+                <select name="room_id" required>
+                    <?php
+                    // Fetch rooms for the dropdown
+                    $room_stmt = $db->query("SELECT id, room_name FROM rooms");
+                    $rooms = $room_stmt->fetchAll(PDO::FETCH_ASSOC);
+                    foreach ($rooms as $room) {
+                        echo "<option value=\"{$room['id']}\">{$room['room_name']}</option>";
+                    }
+                    ?>
+                </select>
 
-            <label for="booking_date">Booking Date:</label>
-            <input type="date" name="booking_date" required>
+                <label for="booking_date">Booking Date:</label>
+                <input type="date" name="booking_date" required>
 
-            <label for="start_time">Start Time:</label>
-            <input type="time" name="start_time" required>
+                <label for="start_time">Start Time:</label>
+                <input type="time" name="start_time" required>
 
-            <label for="end_time">End Time:</label>
-            <input type="time" name="end_time" required>
+                <label for="end_time">End Time:</label>
+                <input type="time" name="end_time" required>
 
-            <button type="submit">Add Schedule</button>
-        </form>
-    </div>
+                <button type="submit">Add Schedule</button>
+            </form>
+        </div>
 
-    <!-- Existing Schedules Table -->
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Room</th>
-                    <th>Booking Date</th>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($schedules as $schedule): ?>
+        <!-- Existing Schedules Table -->
+        <div class="table-container">
+            <h2>Existing Schedules</h2>
+            <table>
+                <thead>
                     <tr>
-                        <td><?= htmlspecialchars($schedule['id']) ?></td>
-                        <td><?= htmlspecialchars($schedule['room_name']) ?></td>
-                        <td><?= htmlspecialchars($schedule['booking_date']) ?></td>
-                        <td><?= htmlspecialchars($schedule['start_time']) ?></td>
-                        <td><?= htmlspecialchars($schedule['end_time']) ?></td>
+                        <th>ID</th>
+                        <th>Room</th>
+                        <th>Booking Date</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($schedules as $schedule): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($schedule['id']) ?></td>
+                            <td><?= htmlspecialchars($schedule['room_name']) ?></td>
+                            <td><?= htmlspecialchars($schedule['booking_date']) ?></td>
+                            <td><?= htmlspecialchars($schedule['start_time']) ?></td>
+                            <td><?= htmlspecialchars($schedule['end_time']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
+</main>
 
-</div>
-
-<script src="header-script.js"></script>
 </body>
 </html>

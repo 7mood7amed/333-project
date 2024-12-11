@@ -35,66 +35,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Room Booking System</title>
     <style>
-        /* Resetting margins and paddings */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f9;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            margin: 0;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            overflow-x: hidden;
             color: #333;
         }
 
         header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background-color: #3498db;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            animation: fadeInDown 1s ease-in-out;
-        }
-
-        .header-container {
+            background: #2575fc;
+            color: white;
+            padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
-            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .logo-img {
+        header .logo img {
             height: 50px;
             cursor: pointer;
-            transition: transform 0.3s ease;
         }
 
-        .logo-img:hover {
-            transform: scale(1.05);
-        }
-
-        nav a {
+        header nav a {
             color: white;
             text-decoration: none;
-            padding: 10px 20px;
             margin-left: 20px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
         }
 
-        nav a:hover {
-            background-color: #2980b9;
-            border-radius: 5px;
-            transform: translateY(-2px);
+        header nav a:hover {
+            background: #0056b3;
         }
 
         .container {
@@ -102,86 +81,75 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            flex-grow: 1;
             padding: 40px;
-            animation: fadeIn 1s ease-in-out;
         }
 
         .login-form {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            padding: 40px 60px;
-            max-width: 400px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px 40px;
             width: 100%;
-            margin-top: 40px;
-        }
-
-        .login-form h2 {
-            font-size: 2rem;
-            color: #3498db;
-            margin-bottom: 20px;
+            max-width: 400px;
             text-align: center;
         }
 
+        .login-form h2 {
+            margin-bottom: 20px;
+            color: #2575fc;
+        }
+
         .login-form label {
-            font-size: 1.1rem;
+            display: block;
+            text-align: left;
             margin-bottom: 8px;
-            color: #333;
+            font-weight: bold;
         }
 
         .login-form input {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             margin-bottom: 20px;
             border-radius: 5px;
             border: 1px solid #ddd;
             font-size: 1rem;
-            outline: none;
-            transition: border-color 0.3s ease;
         }
 
         .login-form input:focus {
-            border-color: #3498db;
-        }
-
-        .button-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
+            border-color: #2575fc;
         }
 
         .login-form button {
-            background-color: #3498db;
+            background: #2575fc;
             color: white;
-            padding: 12px 30px;
+            padding: 12px 20px;
             border: none;
             border-radius: 5px;
-            font-size: 1.1rem;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+            font-size: 1rem;
+            transition: background 0.3s ease;
         }
 
         .login-form button:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
+            background: #0056b3;
         }
 
         .login-form .error-message {
             color: red;
-            font-size: 1rem;
-            text-align: center;
+            font-size: 0.9rem;
             margin-bottom: 15px;
         }
 
         .register-link {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 1rem;
+            margin-top: 15px;
+            font-size: 0.9rem;
         }
 
         .register-link a {
-            color: #3498db;
+            color: #2575fc;
             text-decoration: none;
+            font-weight: bold;
         }
 
         .register-link a:hover {
@@ -190,76 +158,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         footer {
             text-align: center;
-            padding: 20px;
-            background-color: #2c3e50;
+            background: #2c3e50;
             color: white;
+            padding: 20px;
             margin-top: auto;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-container">
-            <div class="logo">
-                <img src="assets/logo.png" alt="Logo" class="logo-img" onclick="window.location.href='index.php';">
-            </div>
-            <nav>
-                <a href="index.php">Home</a>
-                <a href="browse_rooms.php">Browse Rooms</a>
-                <a href="book_room.php">Book a Room</a>
-                <a href="my_bookings.php" class="button">My Bookings</a>
-            </nav>
-        </div>
-    </header>
+<header>
+    <div class="logo">
+        <img src="assets/logo.png" alt="Logo" onclick="window.location.href='index.php';">
+    </div>
+    <nav>
+        <a href="index.php">Home</a>
+        <a href="browse_rooms.php">Browse Rooms</a>
+        <a href="book_room.php">Book a Room</a>
+        <a href="my_bookings.php">My Bookings</a>
+    </nav>
+</header>
 
-    <div class="container">
-        <div class="login-form">
-            <h2>Login</h2>
+<div class="container">
+    <div class="login-form">
+        <h2>Login</h2>
 
-            <?php if (!empty($errors)): ?>
-                <p class="error-message"><?= implode('<br>', $errors) ?></p>
-            <?php endif; ?>
+        <?php if (!empty($errors)): ?>
+            <p class="error-message"><?= implode('<br>', $errors) ?></p>
+        <?php endif; ?>
 
-            <form method="POST">
-                <label for="email">Email:</label>
-                <input type="email" name="email" value="<?= isset($email) ? htmlspecialchars($email) : ''; ?>" required placeholder="Enter your email">
+        <form method="POST">
+            <label for="email">Email:</label>
+            <input type="email" name="email" value="<?= isset($email) ? htmlspecialchars($email) : ''; ?>" required placeholder="Enter your email">
 
-                <label for="password">Password:</label>
-                <input type="password" name="password" required placeholder="Enter your password">
+            <label for="password">Password:</label>
+            <input type="password" name="password" required placeholder="Enter your password">
 
-                <div class="button-container">
-                    <button type="submit">Login</button>
-                </div>
-            </form>
+            <button type="submit">Login</button>
+        </form>
 
-            <div class="register-link">
-                <p>Don't have an account? <a href="register.php">Head to register</a></p>
-            </div>
+        <div class="register-link">
+            <p>Don't have an account? <a href="register.php">Register here</a></p>
         </div>
     </div>
+</div>
 
-    <footer>
-        <p>&copy; 2024 Room Booking System. All rights reserved.</p>
-    </footer>
+<footer>
+    <p>&copy; 2024 Room Booking System. All rights reserved.</p>
+</footer>
 </body>
 </html>
