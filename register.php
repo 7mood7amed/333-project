@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $email = htmlspecialchars(trim($_POST['email']));
     $password = htmlspecialchars(trim($_POST['pass']));
 
-    if (!preg_match("/@stu\.uob\.edu\.bh/", $email)) {
+    if (!preg_match("/@uob\.edu\.bh/", $email)) {
         $errors[] = "Invalid email address. Only UOB emails are allowed."; 
     }
 

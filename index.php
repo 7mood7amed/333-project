@@ -125,6 +125,29 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
             background-color: #0056b3;
         }
 
+        .about-section {
+            background: white;
+            padding: 50px 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 8px;
+        }
+
+        .about-section h2 {
+            font-size: 2rem;
+            color: #2575fc;
+            margin-bottom: 20px;
+        }
+
+        .about-section p {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
         footer {
             text-align: center;
             padding: 20px;
@@ -138,6 +161,11 @@ $user_profile_picture = $is_logged_in && isset($_SESSION['profile_picture']) && 
     <div class="hero-section">
         <h1>Welcome to the Room Booking System</h1>
         <p>Find and book the perfect room for your events and meetings with ease.</p>
+    </div>
+
+    <div class="about-section">
+        <h2>About the System</h2>
+        <p>The Room Booking System is designed to streamline the process of finding and reserving rooms for various purposes. Whether you are planning a business meeting, hosting a conference, or organizing a personal event, our platform provides a simple and efficient solution. With real-time availability and detailed room descriptions, you can easily find a space that meets your needs. Join us today and make your room booking experience seamless and hassle-free.</p>
     </div>
 
     <div class="container">
